@@ -9,3 +9,5 @@ build/
 .agents/
 references/
 claude/
+.windsurf/
+skills-lock.json
