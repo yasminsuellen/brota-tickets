@@ -11,6 +11,9 @@ app.use(cors());
 const authRoutes = require('./routes/auth');
 app.use('/auth', authRoutes);
 
+const eventsRoutes = require('./routes/events');
+app.use('/events', eventsRoutes);
+
 app.get('/health', (req, res) => {
     res.json({ status: 'ok' });
 });
