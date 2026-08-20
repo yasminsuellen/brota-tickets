@@ -1,0 +1,36 @@
+:root {
+
+    /*colors*/
+    --color-dark: #3C127B;
+    --color-bg: #f7f4f2;
+    --color-surface: #ffffff;
+
+    --color-accent: #5b2a9e;
+    --color-accent-2: #e63e7a;
+
+    --color-gold: #f0b429;
+    --color-ink: #1c1424;
+    --color-muted: #6e6478;
+
+    --color-line: rgba(28, 20, 36, 0.1);
+
+    /*font family*/
+    --font-display: 'Bungee', sans-serif;
+    --font-body: 'Asta Sans', system-ui, sans-serif;
+
+    /*font sizes*/
+    --text-sm: 0.875rem;
+    --text-base: 1rem;
+    --text-lg: 1.25rem;
+    --text-xl: 1.8rem;
+    --text-display: clamp(2.25rem, 5vw, 4rem);
+
+    /*spacing*/
+    --space-1: 4px;
+    --space-2: 8px;
+    --space-3: 12px;
+    --space-4: 16px;
+    --space-5: 24px;
+    --space-6: 32px;
+    --space-7: 48px;
+}
