@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { requireAuth, requireRole } = require('../middleware/auth');
+const prisma = require('../lib/prisma');
 
 router.get('/catalog', requireAuth, requireRole('ORGANIZADOR'), async (req, res) => {
     const { keyword } = req.query;
@@ -33,6 +34,65 @@ router.get('/catalog', requireAuth, requireRole('ORGANIZADOR'), async (req, res)
     } catch (err) {
         res.status(502).json({ error: 'Não foi possível buscar eventos no Ticketmaster.' });
     }
+});
+
+router.post('/', requireAuth, requireRole('ORGANIZADOR'), async (req, res) => {
+    const { title, date, location, capacity, price } = req.body;
+
+    const event = await prisma.event.create({
+        data: {
+            title,
+            date: new Date(date),
+            location,
+            capacity: Number(capacity),
+            price: Number(price),
+            organizerId: req.user.id,
+        },
+    });
+
+    res.status(201).json(event);
+});
+
+router.get('/', requireAuth, requireRole('ORGANIZADOR'), async (req, res) => {
+    const events = await prisma.event.findMany({
+        where: { organizerId: req.user.id },
+        orderBy: { date: 'asc' },
+    });
+
+    res.json({ events });
+});
+
+router.get('/:id', requireAuth, requireRole('ORGANIZADOR'), async (req, res) => {
+    const event = await prisma.event.findUnique({ where: { id: req.params.id } });
+
+    if (!event || event.organizerId !== req.user.id) {
+        return res.status(404).json({ error: 'Evento não encontrado.' });
+    }
+
+    res.json(event);
+});
+
+router.put('/:id', requireAuth, requireRole('ORGANIZADOR'), async (req, res) => {
+    const existing = await prisma.event.findUnique({ where: { id: req.params.id } });
+
+    if (!existing || existing.organizerId !== req.user.id) {
+        return res.status(404).json({ error: 'Evento não encontrado.' });
+    }
+
+    const { title, date, location, capacity, price } = req.body;
+
+    const event = await prisma.event.update({
+        where: { id: req.params.id },
+        data: {
+            title,
+            date: new Date(date),
+            location,
+            capacity: Number(capacity),
+            price: Number(price),
+        },
+    });
+
+    res.json(event);
 });
 
 module.exports = router;
