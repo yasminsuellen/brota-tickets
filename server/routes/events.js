@@ -99,13 +99,33 @@ router.get('/stats', requireAuth, requireRole('ORGANIZADOR'), async (req, res) =
 });
 
 router.get('/:id', requireAuth, requireRole('ORGANIZADOR'), async (req, res) => {
-    const event = await prisma.event.findUnique({ where: { id: req.params.id } });
+    const event = await prisma.event.findUnique({
+        where: { id: req.params.id },
+        include: {
+            reservations: {
+                where: { status: 'CONFIRMADA' },
+            },
+        },
+    });
 
     if (!event || event.organizerId !== req.user.id) {
         return res.status(404).json({ error: 'Evento não encontrado.' });
     }
 
-    res.json(event);
+    const { reservations, ...eventFields } = event;
+
+    const ticketsSold = reservations.reduce((sum, reservation) => sum + (reservation.quantity ?? 1), 0);
+    const grossRevenue = ticketsSold * Number(event.price);
+    const occupancy = event.capacity > 0 ? (ticketsSold / event.capacity) * 100 : 0;
+
+    res.json({
+        ...eventFields,
+        stats: {
+            ticketsSold,
+            grossRevenue,
+            occupancy: Math.round(occupancy * 10) / 10,
+        },
+    });
 });
 
 router.put('/:id', requireAuth, requireRole('ORGANIZADOR'), async (req, res) => {
