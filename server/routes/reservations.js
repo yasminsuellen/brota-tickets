@@ -5,6 +5,16 @@ const prisma = require('../lib/prisma');
 const { getReservationType } = require('../utils/seatMap');
 const { signQrToken } = require('../utils/qr');
 
+router.get('/mine', requireAuth, requireRole('CLIENTE'), async (req, res) => {
+    const reservations = await prisma.reservation.findMany({
+        where: { userId: req.user.id, status: 'CONFIRMADA' },
+        include: { ticket: true, event: true },
+        orderBy: { event: { date: 'asc' } },
+    });
+
+    res.json({ reservations });
+});
+
 router.post('/', requireAuth, requireRole('CLIENTE'), async (req, res) => {
     const { eventId, seatCodes, quantity } = req.body;
 
@@ -120,6 +130,19 @@ router.patch('/:id/pay', requireAuth, requireRole('CLIENTE'), async (req, res) =
     ]);
 
     res.json(updated);
+});
+
+router.get('/:id/ticket', async (req, res) => {
+    const reservation = await prisma.reservation.findUnique({
+        where: { id: req.params.id },
+        include: { ticket: true, event: true },
+    });
+
+    if (!reservation || reservation.status !== 'CONFIRMADA' || !reservation.ticket) {
+        return res.status(404).json({ error: 'Ingresso não encontrado.' });
+    }
+
+    res.json(reservation);
 });
 
 module.exports = router;
