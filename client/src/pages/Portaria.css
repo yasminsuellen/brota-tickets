@@ -1,0 +1,146 @@
+.portaria h1 {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    color: var(--color-accent);
+    font-size: var(--text-xl);
+    margin: 0 0 var(--space-2);
+}
+
+.portaria-subtitle {
+    font-size: var(--text-sm);
+    color: var(--color-muted);
+    margin: 0 0 var(--space-6);
+}
+
+.portaria-error {
+    color: var(--color-accent-2);
+    font-size: var(--text-sm);
+    margin-bottom: var(--space-4);
+}
+
+.portaria-select {
+    width: 100%;
+    max-width: 480px;
+    box-sizing: border-box;
+    height: 44px;
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    padding: 0 var(--space-3);
+    border: 1px solid var(--color-line);
+    border-radius: 8px;
+    background: var(--color-surface);
+}
+
+.portaria-mode-toggle {
+    display: flex;
+    gap: var(--space-2);
+    margin-bottom: var(--space-5);
+}
+
+.portaria-mode-toggle button {
+    height: 40px;
+    box-sizing: border-box;
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    color: var(--color-ink);
+    background: var(--color-surface);
+    border: 1px solid var(--color-line);
+    border-radius: 7px;
+    padding: 0 var(--space-4);
+    cursor: pointer;
+}
+
+.portaria-mode-toggle button.is-active {
+    color: var(--color-surface);
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+}
+
+.portaria-reader {
+    max-width: 400px;
+    margin: 0 auto;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.portaria-manual {
+    display: flex;
+    gap: var(--space-3);
+    max-width: 480px;
+}
+
+.portaria-manual input {
+    flex: 1;
+    box-sizing: border-box;
+    height: 44px;
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    padding: 0 var(--space-3);
+    border: 1px solid var(--color-line);
+    border-radius: 8px;
+}
+
+.portaria-manual button {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    font-size: var(--text-sm);
+    color: var(--color-surface);
+    background: var(--color-accent);
+    border: none;
+    border-radius: 8px;
+    padding: 0 var(--space-5);
+    cursor: pointer;
+}
+
+.portaria-result {
+    max-width: 480px;
+    margin: var(--space-6) auto 0;
+    padding: var(--space-7);
+    border-radius: 12px;
+    text-align: center;
+    color: var(--color-surface);
+}
+
+.portaria-result h1 {
+    color: inherit;
+    margin: 0 0 var(--space-3);
+}
+
+.portaria-result-event {
+    margin: 0 0 var(--space-1);
+    font-size: var(--text-base);
+    opacity: 0.9;
+}
+
+.portaria-result-item {
+    margin: 0 0 var(--space-5);
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    font-size: var(--text-lg);
+}
+
+.portaria-result.is-valid {
+    background: var(--color-accent);
+}
+
+.portaria-result.is-invalid {
+    background: var(--color-accent-2);
+}
+
+.portaria-result.is-used,
+.portaria-result.is-wrong-event {
+    background: var(--color-gold);
+    color: var(--color-ink);
+}
+
+.portaria-next {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    font-size: var(--text-sm);
+    color: var(--color-accent);
+    background: var(--color-surface);
+    border: none;
+    border-radius: 8px;
+    padding: var(--space-3) var(--space-5);
+    cursor: pointer;
+}
