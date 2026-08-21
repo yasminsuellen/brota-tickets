@@ -14,6 +14,9 @@ app.use('/auth', authRoutes);
 const eventsRoutes = require('./routes/events');
 app.use('/events', eventsRoutes);
 
+const reservationsRoutes = require('./routes/reservations');
+app.use('/reservations', reservationsRoutes);
+
 app.get('/health', (req, res) => {
     res.json({ status: 'ok' });
 });

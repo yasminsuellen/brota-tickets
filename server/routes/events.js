@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { requireAuth, requireRole } = require('../middleware/auth');
 const prisma = require('../lib/prisma');
+const { getReservationType, generateSeatCodes } = require('../utils/seatMap');
 
 router.get('/catalog', requireAuth, requireRole('ORGANIZADOR'), async (req, res) => {
     const { keyword } = req.query;
@@ -34,6 +35,65 @@ router.get('/catalog', requireAuth, requireRole('ORGANIZADOR'), async (req, res)
     } catch (err) {
         res.status(502).json({ error: 'Não foi possível buscar eventos no Ticketmaster.' });
     }
+});
+
+router.get('/published', requireAuth, requireRole('CLIENTE'), async (req, res) => {
+    const { keyword, category } = req.query;
+
+    const filters = [];
+
+    if (keyword) {
+        filters.push({
+            OR: [
+                { title: { contains: keyword, mode: 'insensitive' } },
+                { location: { contains: keyword, mode: 'insensitive' } },
+            ],
+        });
+    }
+
+    if (category) {
+        filters.push({ category: { equals: category, mode: 'insensitive' } });
+    }
+
+    const events = await prisma.event.findMany({
+        where: filters.length > 0 ? { AND: filters } : undefined,
+        orderBy: { date: 'asc' },
+    });
+
+    res.json({ events });
+});
+
+router.get('/published/:id', requireAuth, requireRole('CLIENTE'), async (req, res) => {
+    const event = await prisma.event.findUnique({
+        where: { id: req.params.id },
+        include: {
+            reservations: {
+                where: { status: { in: ['PENDENTE', 'CONFIRMADA'] } },
+            },
+        },
+    });
+
+    if (!event) {
+        return res.status(404).json({ error: 'Evento não encontrado.' });
+    }
+
+    const { reservations, ...eventFields } = event;
+    const type = getReservationType(event.capacity);
+
+    if (type === 'SEAT_MAP') {
+        const takenSeats = new Set(reservations.map((reservation) => reservation.seatCode));
+        const seats = generateSeatCodes(event.capacity).map((code) => ({
+            code,
+            taken: takenSeats.has(code),
+        }));
+
+        return res.json({ ...eventFields, type, seats });
+    }
+
+    const sold = reservations.reduce((sum, reservation) => sum + (reservation.quantity ?? 0), 0);
+    const remaining = event.capacity - sold;
+
+    res.json({ ...eventFields, type, remaining });
 });
 
 router.post('/', requireAuth, requireRole('ORGANIZADOR'), async (req, res) => {
