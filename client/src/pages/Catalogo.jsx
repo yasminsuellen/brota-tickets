@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import PageHeader from '../components/PageHeader';
+import { removeAccents } from '../utils/removeAccents';
 import './Catalogo.css';
 
 function Catalogo() {
@@ -46,7 +48,7 @@ function Catalogo() {
 
     return (
         <div className="page catalogo">
-            <h1 className="catalogo-title">Escolha um evento do catálogo</h1>
+            <PageHeader title="Escolha um evento do catálogo" />
             <form className="catalogo-search" onSubmit={handleSearch}>
                 <input
                     type="text"
@@ -59,13 +61,15 @@ function Catalogo() {
             {error && <p className="catalogo-error">{error}</p>}
             <div className="catalogo-grid">
                 {events.map((event) => (
-                    <div className="catalogo-card" key={event.id}>
-                        {event.image && <img src={event.image} alt={event.title} />}
+                    <div className="catalogo-card" key={event.id} onClick={() => handleSelect(event)}>
+                        <div
+                            className="catalogo-card-media"
+                            style={event.image ? { backgroundImage: `url(${event.image})` } : undefined}
+                        ></div>
                         <div className="catalogo-card-body">
                             <span className="catalogo-date">{event.date}</span>
-                            <h3>{event.title}</h3>
-                            <p>{event.venue}{event.city ? ` · ${event.city}` : ''}</p>
-                            <button onClick={() => handleSelect(event)}>Selecionar</button>
+                            <h3 className="catalogo-card-title">{removeAccents(event.title)}</h3>
+                            <p className="catalogo-card-location">{removeAccents(event.venue)}{event.city ? ` · ${removeAccents(event.city)}` : ''}</p>
                         </div>
                     </div>
                 ))}

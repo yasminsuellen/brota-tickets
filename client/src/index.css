@@ -4,6 +4,12 @@
 
 body {
   margin: 0;
+  scrollbar-gutter: stable;
+  scrollbar-width: none;
+}
+
+::-webkit-scrollbar {
+  display: none;
 }
 
 ::selection {
@@ -20,4 +26,11 @@ textarea:focus {
 
 .page {
   padding: var(--space-7);
+}
+
+@media (max-width: 859px) {
+  .page {
+    padding-left: var(--space-6);
+    padding-right: var(--space-6);
+  }
 }

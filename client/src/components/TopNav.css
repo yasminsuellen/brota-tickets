@@ -5,11 +5,10 @@
     justify-content: space-between;
     padding: var(--space-5) var(--space-7);
     background-image:
-        linear-gradient(90deg, rgba(23, 11, 46, 0.20), rgba(23, 11, 46, 0.60)),
+        linear-gradient(90deg, rgba(23, 11, 46, 0), rgba(23, 11, 46, 0)),
         url(../assets/hero.png);
     background-size: cover, cover;
     background-position: center, center 0%;
-    overflow: hidden;
 }
 
 .topnav-glow {
@@ -55,7 +54,7 @@
     letter-spacing: 0.1em;
 }
 
-.topnav button {
+.topnav-actions button {
     position: relative;
     font-family: var(--font-body);
     font-weight: 500;
@@ -67,4 +66,45 @@
     border-radius: 7px;
     padding: var(--space-2) var(--space-5);
     cursor: pointer;
+}
+
+.topnav-toggle {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: transparent;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    color: var(--color-surface);
+}
+
+@media (max-width: 860px) {
+    .topnav-toggle {
+        display: flex;
+    }
+
+    .topnav-actions {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        flex-direction: column;
+        align-items: stretch;
+        gap: var(--space-4);
+        padding: var(--space-5) var(--space-7);
+        background: var(--color-dark);
+    }
+
+    .topnav-actions.is-open {
+        display: flex;
+    }
+
+    .topnav-links {
+        flex-direction: column;
+        gap: var(--space-4);
+    }
 }

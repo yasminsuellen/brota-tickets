@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import PageHeader from '../components/PageHeader';
 import './CriarEvento.css';
 
 function CriarEvento() {
@@ -61,7 +62,7 @@ function CriarEvento() {
 
     return (
         <div className="page criar-evento">
-            <h1 className="criar-evento-title">Criar evento</h1>
+            <PageHeader title="Criar evento" showBack />
             <form onSubmit={handleSubmit}>
                 <div className="criar-evento-row">
                     <label>
