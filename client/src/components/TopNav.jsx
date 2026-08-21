@@ -11,7 +11,7 @@ const NAV_LINKS = {
   ],
   ORGANIZADOR: [
     { label: 'Painel', to: '/organizador' },
-    { label: 'Catálogo', to: '/organizador/catalogo' },
+    { label: 'Catalogo', to: '/organizador/catalogo' },
   ],
   PORTARIA: [],
 };
@@ -26,12 +26,14 @@ function TopNav() {
       <Link to="/" className="topnav-brand">
         <img src={logoImage} alt="Brota Tickets" />
       </Link>
-      <nav className="topnav-links">
-        {links.map((link) => (
-          <Link key={link.to} to={link.to}>{link.label}</Link>
-        ))}
-      </nav>
-      <LogoutButton />
+      <div className="topnav-actions">
+        <nav className="topnav-links">
+          {links.map((link) => (
+            <Link key={link.to} to={link.to}>{link.label}</Link>
+          ))}
+        </nav>
+        <LogoutButton />
+      </div>
     </header>
   );
 }

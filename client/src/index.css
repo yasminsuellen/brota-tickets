@@ -11,8 +11,13 @@ body {
   color: var(--color-surface);
 }
 
-input:focus {
+input:focus,
+textarea:focus {
   outline: none;
   border-color: var(--color-accent-2);
   box-shadow: 0 0 0 1px color-mix(in srgb, var(--color-accent-2) 80%, transparent);
+}
+
+.page {
+  padding: var(--space-7);
 }

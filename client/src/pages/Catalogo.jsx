@@ -45,7 +45,7 @@ function Catalogo() {
     }
 
     return (
-        <div className="catalogo">
+        <div className="page catalogo">
             <h1 className="catalogo-title">Escolha um evento do catálogo</h1>
             <form className="catalogo-search" onSubmit={handleSearch}>
                 <input

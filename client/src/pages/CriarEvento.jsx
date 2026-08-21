@@ -60,7 +60,7 @@ function CriarEvento() {
     }
 
     return (
-        <div className="criar-evento">
+        <div className="page criar-evento">
             <h1 className="criar-evento-title">Criar evento</h1>
             <form onSubmit={handleSubmit}>
                 <div className="criar-evento-row">
@@ -93,14 +93,16 @@ function CriarEvento() {
                         <input type="number" min="0" step="0.01" placeholder="50" value={price} onChange={(e) => setPrice(e.target.value)} required />
                     </label>
                 </div>
-                <label>
-                    Capacidade
-                    <input type="number" min="1" placeholder="500" value={capacity} onChange={(e) => setCapacity(e.target.value)} required />
-                </label>
-                <label>
-                    Descrição
-                    <textarea placeholder="O que torna essa noite especial?" value={description} onChange={(e) => setDescription(e.target.value)} rows="4" />
-                </label>
+                <div className="criar-evento-row">
+                    <label>
+                        Capacidade
+                        <input type="number" min="1" placeholder="500" value={capacity} onChange={(e) => setCapacity(e.target.value)} required />
+                    </label>
+                    <label>
+                        Descrição
+                        <textarea placeholder="O que torna essa noite especial?" value={description} onChange={(e) => setDescription(e.target.value)} />
+                    </label>
+                </div>
                 {error && <p className="criar-evento-error">{error}</p>}
                 <button type="submit">Publicar evento</button>
             </form>
