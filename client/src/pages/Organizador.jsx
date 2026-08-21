@@ -93,12 +93,13 @@ function Organizador() {
                             <th>Local</th>
                             <th>Capacidade</th>
                             <th>Preço</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
                         {events.length === 0 ? (
                             <tr>
-                                <td className="painel-empty" colSpan={5}>Nenhum evento publicado ainda.</td>
+                                <td className="painel-empty" colSpan={6}>Nenhum evento publicado ainda.</td>
                             </tr>
                         ) : (
                             events.map((event) => (
@@ -108,6 +109,15 @@ function Organizador() {
                                     <td>{event.location}</td>
                                     <td>{event.capacity}</td>
                                     <td>{currency.format(event.price)}</td>
+                                    <td className="painel-table-actions">
+                                        <Link to={`/organizador/eventos/${event.id}`} className="painel-gerenciar-btn" aria-label="Gerenciar evento">
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                                <path d="M12 20h9"></path>
+                                                <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"></path>
+                                            </svg>
+                                            Gerenciar
+                                        </Link>
+                                    </td>
                                 </tr>
                             ))
                         )}

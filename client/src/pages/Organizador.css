@@ -142,6 +142,20 @@
     font-size: var(--text-sm);
 }
 
+.painel-table-actions {
+    text-align: right;
+}
+
+.painel-gerenciar-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    font-size: var(--text-sm);
+    color: var(--color-accent);
+    text-decoration: none;
+    white-space: nowrap;
+}
+
 @media (max-width: 860px) {
     .painel-cards {
         grid-template-columns: 1fr;

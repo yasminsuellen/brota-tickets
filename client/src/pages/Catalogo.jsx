@@ -48,7 +48,7 @@ function Catalogo() {
 
     return (
         <div className="page catalogo">
-            <PageHeader title="Escolha um evento do catálogo" />
+            <PageHeader title="Escolha um evento do catálogo" showBack />
             <form className="catalogo-search" onSubmit={handleSearch}>
                 <input
                     type="text"
