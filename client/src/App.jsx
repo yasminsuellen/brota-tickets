@@ -11,6 +11,8 @@ import Cliente from './pages/Cliente';
 import EventDetail from './pages/EventDetail';
 import Reservar from './pages/Reservar';
 import Pagamento from './pages/Pagamento';
+import MeusIngressos from './pages/MeusIngressos';
+import TicketDetail from './pages/TicketDetail';
 import Portaria from './pages/Portaria';
 
 function App() {
@@ -23,6 +25,8 @@ function App() {
         <Route path="/eventos/:id" element={<ProtectedRoute role="CLIENTE"><EventDetail /></ProtectedRoute>} />
         <Route path="/eventos/:id/reservar" element={<ProtectedRoute role="CLIENTE"><Reservar /></ProtectedRoute>} />
         <Route path="/reservas/:id/pagamento" element={<ProtectedRoute role="CLIENTE"><Pagamento /></ProtectedRoute>} />
+        <Route path="/meus-ingressos" element={<ProtectedRoute role="CLIENTE"><MeusIngressos /></ProtectedRoute>} />
+        <Route path="/ingressos/:id" element={<TicketDetail />} />
         <Route path="/organizador" element={<ProtectedRoute role="ORGANIZADOR"><Organizador /></ProtectedRoute>} />
         <Route path="/organizador/catalogo" element={<ProtectedRoute role="ORGANIZADOR"><Catalogo /></ProtectedRoute>} />
         <Route path="/organizador/eventos/novo" element={<ProtectedRoute role="ORGANIZADOR"><CriarEvento /></ProtectedRoute>} />

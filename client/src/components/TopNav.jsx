@@ -46,7 +46,7 @@ function TopNav() {
             <Link key={link.to} to={link.to} onClick={() => setMenuOpen(false)}>{link.label}</Link>
           ))}
         </nav>
-        <LogoutButton />
+        {user && <LogoutButton />}
       </div>
     </header>
   );
