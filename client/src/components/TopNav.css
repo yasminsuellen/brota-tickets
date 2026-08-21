@@ -1,0 +1,61 @@
+.topnav {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-3) var(--space-6);
+    background: radial-gradient(120% 180% at 15% -60%, var(--color-accent) 0%, var(--color-dark) 60%);
+    overflow: hidden;
+}
+
+.topnav-glow {
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle, var(--color-accent-2) 1px, transparent 1.3px);
+    background-size: 7px 7px;
+    opacity: 0.18;
+    mix-blend-mode: screen;
+    pointer-events: none;
+}
+
+.topnav-brand {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.topnav-brand img {
+    height: 32px;
+    width: auto;
+}
+
+.topnav-links {
+    position: relative;
+    display: flex;
+    gap: var(--space-5);
+    flex: 1;
+    justify-content: center;
+}
+
+.topnav-links a {
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: var(--text-sm);
+    text-transform: uppercase;
+    color: var(--color-surface);
+    text-decoration: none;
+    letter-spacing: 0.03em;
+}
+
+.topnav button {
+    position: relative;
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    font-size: var(--text-sm);
+    color: var(--color-dark);
+    background: var(--color-surface);
+    border: none;
+    border-radius: 999px;
+    padding: var(--space-2) var(--space-4);
+    cursor: pointer;
+}
