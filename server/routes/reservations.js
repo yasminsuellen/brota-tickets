@@ -3,7 +3,7 @@ const router = express.Router();
 const { requireAuth, requireRole } = require('../middleware/auth');
 const prisma = require('../lib/prisma');
 const { getReservationType } = require('../utils/seatMap');
-const { signQrToken } = require('../utils/qr');
+const { signQrToken, verifyQrToken } = require('../utils/qr');
 
 router.get('/mine', requireAuth, requireRole('CLIENTE'), async (req, res) => {
     const reservations = await prisma.reservation.findMany({
@@ -13,6 +13,45 @@ router.get('/mine', requireAuth, requireRole('CLIENTE'), async (req, res) => {
     });
 
     res.json({ reservations });
+});
+
+router.post('/validate', requireAuth, requireRole('PORTARIA'), async (req, res) => {
+    const { qrToken, eventId } = req.body;
+
+    const reservationId = verifyQrToken(qrToken);
+
+    if (!reservationId) {
+        return res.json({ result: 'INVALIDO' });
+    }
+
+    const reservation = await prisma.reservation.findUnique({
+        where: { id: reservationId },
+        include: { ticket: true, event: true },
+    });
+
+    if (!reservation || reservation.status !== 'CONFIRMADA' || !reservation.ticket) {
+        return res.json({ result: 'INVALIDO' });
+    }
+
+    if (reservation.eventId !== eventId) {
+        return res.json({ result: 'EVENTO_ERRADO', event: reservation.event });
+    }
+
+    const { count } = await prisma.ticket.updateMany({
+        where: { id: reservation.ticket.id, validated: false },
+        data: { validated: true, validatedAt: new Date() },
+    });
+
+    if (count === 0) {
+        return res.json({ result: 'JA_UTILIZADO', event: reservation.event });
+    }
+
+    res.json({
+        result: 'VALIDO',
+        event: reservation.event,
+        seatCode: reservation.seatCode,
+        quantity: reservation.quantity,
+    });
 });
 
 router.post('/', requireAuth, requireRole('CLIENTE'), async (req, res) => {

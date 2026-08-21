@@ -37,7 +37,7 @@ router.get('/catalog', requireAuth, requireRole('ORGANIZADOR'), async (req, res)
     }
 });
 
-router.get('/published', requireAuth, requireRole('CLIENTE'), async (req, res) => {
+router.get('/published', requireAuth, async (req, res) => {
     const { keyword, category } = req.query;
 
     const filters = [];
