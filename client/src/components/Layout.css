@@ -1,5 +1,7 @@
 .app-shell {
+    position: relative;
     min-height: 100svh;
+    overflow-x: hidden;
     display: flex;
     flex-direction: column;
     background: var(--color-bg);

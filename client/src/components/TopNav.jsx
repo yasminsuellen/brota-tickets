@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import LogoutButton from './LogoutButton';
 import logoImage from '../assets/logo.png';
@@ -20,11 +20,12 @@ const NAV_LINKS = {
 function TopNav() {
   const { user } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
+  const location = useLocation();
   const links = user ? NAV_LINKS[user.role] || [] : [];
+  const overlay = location.pathname === '/';
 
   return (
-    <header className="topnav">
-      <div className="topnav-glow"></div>
+    <header className={`topnav${overlay ? ' topnav-overlay' : ''}`}>
       <Link to="/" className="topnav-brand">
         <img src={logoImage} alt="Brota Tickets" />
       </Link>
