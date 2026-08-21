@@ -32,6 +32,8 @@ model User {
 model Event {
   id          String   @id @default(uuid())
   title       String
+  category    String?
+  description String?
   date        DateTime
   location    String
   capacity    Int

@@ -1,0 +1,70 @@
+.criar-evento {
+    padding: var(--space-6);
+    max-width: 760px;
+    margin: 0 auto;
+}
+
+.criar-evento-title {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    color: var(--color-dark);
+    font-size: var(--text-xl);
+    margin: 0 0 var(--space-5);
+}
+
+.criar-evento form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+}
+
+.criar-evento-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-4);
+}
+
+.criar-evento label {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    font-size: var(--text-sm);
+    color: var(--color-ink);
+}
+
+.criar-evento input,
+.criar-evento textarea {
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    padding: var(--space-3);
+    border: 1px solid var(--color-line);
+    border-radius: 8px;
+    resize: vertical;
+}
+
+.criar-evento button {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    font-size: var(--text-sm);
+    color: var(--color-surface);
+    background: var(--color-accent);
+    border: none;
+    border-radius: 8px;
+    padding: var(--space-3);
+    cursor: pointer;
+    align-self: flex-start;
+    padding-left: var(--space-5);
+    padding-right: var(--space-5);
+}
+
+.criar-evento-error {
+    color: var(--color-accent-2);
+    font-size: var(--text-sm);
+    margin: 0;
+}
+
+@media (max-width: 600px) {
+    .criar-evento-row {
+        grid-template-columns: 1fr;
+    }
+}

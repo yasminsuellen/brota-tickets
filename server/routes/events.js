@@ -37,11 +37,13 @@ router.get('/catalog', requireAuth, requireRole('ORGANIZADOR'), async (req, res)
 });
 
 router.post('/', requireAuth, requireRole('ORGANIZADOR'), async (req, res) => {
-    const { title, date, location, capacity, price } = req.body;
+    const { title, category, description, date, location, capacity, price } = req.body;
 
     const event = await prisma.event.create({
         data: {
             title,
+            category,
+            description,
             date: new Date(date),
             location,
             capacity: Number(capacity),
@@ -113,12 +115,14 @@ router.put('/:id', requireAuth, requireRole('ORGANIZADOR'), async (req, res) => 
         return res.status(404).json({ error: 'Evento não encontrado.' });
     }
 
-    const { title, date, location, capacity, price } = req.body;
+    const { title, category, description, date, location, capacity, price } = req.body;
 
     const event = await prisma.event.update({
         where: { id: req.params.id },
         data: {
             title,
+            category,
+            description,
             date: new Date(date),
             location,
             capacity: Number(capacity),
