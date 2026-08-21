@@ -37,7 +37,7 @@
 
 .login-title {
     font-family: var(--font-display);
-    color: var(--color-dark);
+    color: var(--color-accent);
     font-size: var(--text-xl);
     text-transform: uppercase;
     margin: 0 0 var(--space-5);

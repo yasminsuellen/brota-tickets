@@ -9,7 +9,7 @@
     flex: 1;
     font-family: var(--font-display);
     text-transform: uppercase;
-    color: var(--color-dark);
+    color: var(--color-accent);
     font-size: var(--text-xl);
     margin: 0;
 }
