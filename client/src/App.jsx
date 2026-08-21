@@ -6,7 +6,11 @@ import Organizador from './pages/Organizador';
 import Catalogo from './pages/Catalogo';
 import CriarEvento from './pages/CriarEvento';
 import GerenciarEvento from './pages/GerenciarEvento';
+import Home from './pages/Home';
 import Cliente from './pages/Cliente';
+import EventDetail from './pages/EventDetail';
+import Reservar from './pages/Reservar';
+import Pagamento from './pages/Pagamento';
 import Portaria from './pages/Portaria';
 
 function App() {
@@ -14,7 +18,11 @@ function App() {
     <Layout>
       <Routes>
         <Route path="/login" element={<Login />} />
-        <Route path="/" element={<Cliente />} />
+        <Route path="/" element={<ProtectedRoute role="CLIENTE"><Home /></ProtectedRoute>} />
+        <Route path="/eventos" element={<ProtectedRoute role="CLIENTE"><Cliente /></ProtectedRoute>} />
+        <Route path="/eventos/:id" element={<ProtectedRoute role="CLIENTE"><EventDetail /></ProtectedRoute>} />
+        <Route path="/eventos/:id/reservar" element={<ProtectedRoute role="CLIENTE"><Reservar /></ProtectedRoute>} />
+        <Route path="/reservas/:id/pagamento" element={<ProtectedRoute role="CLIENTE"><Pagamento /></ProtectedRoute>} />
         <Route path="/organizador" element={<ProtectedRoute role="ORGANIZADOR"><Organizador /></ProtectedRoute>} />
         <Route path="/organizador/catalogo" element={<ProtectedRoute role="ORGANIZADOR"><Catalogo /></ProtectedRoute>} />
         <Route path="/organizador/eventos/novo" element={<ProtectedRoute role="ORGANIZADOR"><CriarEvento /></ProtectedRoute>} />
