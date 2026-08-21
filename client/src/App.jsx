@@ -3,6 +3,7 @@ import Layout from './components/Layout'
 import ProtectedRoute from './components/ProtectedRoute';
 import Login from './pages/Login';
 import Organizador from './pages/Organizador';
+import Catalogo from './pages/Catalogo';
 import Cliente from './pages/Cliente';
 import Portaria from './pages/Portaria';
 
@@ -13,6 +14,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/" element={<Cliente />} />
         <Route path="/organizador" element={<ProtectedRoute role="ORGANIZADOR"><Organizador /></ProtectedRoute>} />
+        <Route path="/organizador/catalogo" element={<ProtectedRoute role="ORGANIZADOR"><Catalogo /></ProtectedRoute>} />
         <Route path="/portaria" element={<ProtectedRoute role="PORTARIA"><Portaria /></ProtectedRoute>} />
       </Routes>
     </Layout>
