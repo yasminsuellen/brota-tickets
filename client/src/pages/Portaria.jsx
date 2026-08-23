@@ -117,30 +117,6 @@ function Portaria() {
         setManualCode('');
     }
 
-    if (!eventId) {
-        return (
-            <div className="page portaria">
-                <h1>Portaria</h1>
-                <p className="portaria-subtitle">Selecione o evento que está sendo validado.</p>
-                {error && <p className="portaria-error">{error}</p>}
-                <select
-                    className="portaria-select"
-                    value={eventId}
-                    onChange={(e) => setEventId(e.target.value)}
-                >
-                    <option value="">Escolha um evento...</option>
-                    {events.map((event) => (
-                        <option key={event.id} value={event.id}>
-                            {event.title} — {formatDate(event.date)}
-                        </option>
-                    ))}
-                </select>
-            </div>
-        );
-    }
-
-    const currentEvent = events.find((event) => event.id === eventId);
-
     if (result) {
         const meta = RESULT_META[result.result];
 
@@ -167,37 +143,53 @@ function Portaria() {
     return (
         <div className="page portaria">
             <h1>Portaria</h1>
-            <p className="portaria-subtitle">Validando ingressos para {currentEvent?.title}</p>
-
-            <div className="portaria-mode-toggle">
-                <button
-                    className={mode === 'camera' ? 'is-active' : ''}
-                    onClick={() => setMode('camera')}
-                >
-                    Câmera
-                </button>
-                <button
-                    className={mode === 'manual' ? 'is-active' : ''}
-                    onClick={() => setMode('manual')}
-                >
-                    Digitar código
-                </button>
-            </div>
 
             {error && <p className="portaria-error">{error}</p>}
 
-            {mode === 'camera' ? (
-                <div id={READER_ID} className="portaria-reader"></div>
-            ) : (
-                <form className="portaria-manual" onSubmit={handleManualSubmit}>
-                    <input
-                        type="text"
-                        placeholder="Cole ou digite o código do ingresso"
-                        value={manualCode}
-                        onChange={(e) => setManualCode(e.target.value)}
-                    />
-                    <button type="submit">Validar</button>
-                </form>
+            <select
+                className="portaria-select"
+                value={eventId}
+                onChange={(e) => setEventId(e.target.value)}
+            >
+                <option value="">Escolha um evento...</option>
+                {events.map((event) => (
+                    <option key={event.id} value={event.id}>
+                        {event.title} — {formatDate(event.date)}
+                    </option>
+                ))}
+            </select>
+
+            {eventId && (
+                <>
+                    <div className="portaria-mode-toggle">
+                        <button
+                            className={mode === 'camera' ? 'is-active' : ''}
+                            onClick={() => setMode('camera')}
+                        >
+                            Câmera
+                        </button>
+                        <button
+                            className={mode === 'manual' ? 'is-active' : ''}
+                            onClick={() => setMode('manual')}
+                        >
+                            Digitar código
+                        </button>
+                    </div>
+
+                    {mode === 'camera' ? (
+                        <div id={READER_ID} className="portaria-reader"></div>
+                    ) : (
+                        <form className="portaria-manual" onSubmit={handleManualSubmit}>
+                            <input
+                                type="text"
+                                placeholder="Cole ou digite o código do ingresso"
+                                value={manualCode}
+                                onChange={(e) => setManualCode(e.target.value)}
+                            />
+                            <button type="submit">Validar</button>
+                        </form>
+                    )}
+                </>
             )}
         </div>
     );
