@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { QRCodeSVG } from 'qrcode.react';
+import PageHeader from '../components/PageHeader';
 import { formatDate, formatTime } from '../utils/formatDateTime';
 import './TicketDetail.css';
 
@@ -67,8 +68,8 @@ function TicketDetail() {
 
     return (
         <div className="page ticket-detail">
+            <PageHeader title="Seu ingresso" showBack />
             <div className="ticket-detail-card">
-                <span className="ticket-detail-label">Seu ingresso</span>
                 <h1>{event.title}</h1>
                 <p className="ticket-detail-meta">
                     {formatDate(event.date)} · {formatTime(event.date)}
