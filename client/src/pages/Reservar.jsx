@@ -3,6 +3,9 @@ import { useParams, useNavigate, useLocation, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import './Reservar.css';
 
+// Matches the 15-seats-per-row layout in Reservar.css and server/utils/seatMap.js
+const SEATS_PER_ROW_CENTER = 8;
+
 function Reservar() {
     const { id } = useParams();
     const { token } = useAuth();
@@ -109,26 +112,33 @@ function Reservar() {
             {event.type === 'SEAT_MAP' ? (
                 <>
                     <div className="reservar-palco">PALCO</div>
+                    <p className="reservar-scroll-hint">← Arraste para o lado para ver mais assentos →</p>
                     <div className="reservar-seatmap-wrap">
                         <div className="reservar-seatmap">
-                            {event.seats.map((seat) => (
-                                <button
-                                    key={seat.code}
-                                    className={`reservar-seat${seat.taken ? ' is-taken' : ''}${
-                                        selectedSeats.includes(seat.code) ? ' is-selected' : ''
-                                    }`}
-                                    disabled={seat.taken}
-                                    onClick={() => toggleSeat(seat.code)}
-                                >
-                                    {seat.code}
-                                </button>
-                            ))}
+                            {event.seats.map((seat) => {
+                                const seatNumber = Number(seat.code.match(/\d+/)?.[0]);
+                                const isCenter = seatNumber === SEATS_PER_ROW_CENTER;
+
+                                return (
+                                    <button
+                                        key={seat.code}
+                                        className={`reservar-seat${seat.taken ? ' is-taken' : ''}${
+                                            selectedSeats.includes(seat.code) ? ' is-selected' : ''
+                                        }${isCenter ? ' is-center' : ''}`}
+                                        disabled={seat.taken}
+                                        onClick={() => toggleSeat(seat.code)}
+                                    >
+                                        {seat.code}
+                                    </button>
+                                );
+                            })}
                         </div>
                     </div>
                     <div className="reservar-legend">
                         <span><i className="reservar-legend-dot is-taken"></i> Ocupado</span>
                         <span><i className="reservar-legend-dot"></i> Disponível</span>
                         <span><i className="reservar-legend-dot is-selected"></i> Selecionado</span>
+                        <span><i className="reservar-legend-dot is-center"></i> Coluna central</span>
                     </div>
                     {selectedSeats.length > 0 && (
                         <p className="reservar-selected-count">
