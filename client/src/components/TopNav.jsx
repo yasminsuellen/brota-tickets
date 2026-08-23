@@ -16,7 +16,9 @@ const NAV_LINKS = {
     { label: 'Painel', to: '/organizador' },
     { label: 'Catalogo', to: '/organizador/catalogo' },
   ],
-  PORTARIA: [],
+  PORTARIA: [
+    { label: 'Validar', to: '/portaria' },
+  ],
 };
 
 function TopNav() {
