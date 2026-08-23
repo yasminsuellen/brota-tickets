@@ -9,6 +9,10 @@ function Organizador() {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(true);
     const [deletingId, setDeletingId] = useState(null);
+    const [search, setSearch] = useState('');
+    const [categoryFilter, setCategoryFilter] = useState('Tudo');
+    const [monthFilter, setMonthFilter] = useState('');
+    const [ufFilter, setUfFilter] = useState('');
     const { user, token } = useAuth();
 
     useEffect(() => {
@@ -79,6 +83,16 @@ function Organizador() {
     const proximoEvento = events.find((event) => new Date(event.date) >= new Date());
     const currency = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
 
+    const categories = [...new Set(events.map((event) => event.category).filter(Boolean))];
+
+    const filteredEvents = events.filter((event) => {
+        if (search && !event.title.toLowerCase().includes(search.toLowerCase())) return false;
+        if (categoryFilter !== 'Tudo' && event.category !== categoryFilter) return false;
+        if (monthFilter && event.date?.slice(0, 7) !== monthFilter) return false;
+        if (ufFilter && !event.location?.toLowerCase().includes(ufFilter.toLowerCase())) return false;
+        return true;
+    });
+
     return (
         <div className="page painel">
             <div className="painel-header">
@@ -115,6 +129,35 @@ function Organizador() {
                 </div>
             </div>
 
+            <div className="painel-filters">
+                <input
+                    type="text"
+                    className="painel-filter-search"
+                    placeholder="Buscar por nome..."
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                />
+                <select value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value)}>
+                    <option value="Tudo">Todas as categorias</option>
+                    {categories.map((c) => (
+                        <option key={c} value={c}>{c}</option>
+                    ))}
+                </select>
+                <input
+                    type="month"
+                    value={monthFilter}
+                    onChange={(e) => setMonthFilter(e.target.value)}
+                />
+                <input
+                    type="text"
+                    className="painel-filter-uf"
+                    placeholder="UF"
+                    maxLength={2}
+                    value={ufFilter}
+                    onChange={(e) => setUfFilter(e.target.value)}
+                />
+            </div>
+
             <div className="painel-table-wrap">
                 <table className="painel-table">
                     <thead>
@@ -128,12 +171,14 @@ function Organizador() {
                         </tr>
                     </thead>
                     <tbody>
-                        {events.length === 0 ? (
+                        {filteredEvents.length === 0 ? (
                             <tr>
-                                <td className="painel-empty" colSpan={6}>Nenhum evento publicado ainda.</td>
+                                <td className="painel-empty" colSpan={6}>
+                                    {events.length === 0 ? 'Nenhum evento publicado ainda.' : 'Nenhum evento encontrado.'}
+                                </td>
                             </tr>
                         ) : (
-                            events.map((event) => (
+                            filteredEvents.map((event) => (
                                 <tr key={event.id}>
                                     <td className="painel-col-evento" title={event.title}>{event.title}</td>
                                     <td>{event.date?.slice(0, 10)}</td>
