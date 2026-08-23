@@ -67,6 +67,20 @@ function MeusIngressos() {
         return matchesCategory && matchesKeyword;
     });
 
+    // Multiple seats bought for the same show are separate reservations
+    // (each seat needs its own QR for door validation), but they should
+    // read as one card here, opening into a list of the individual tickets.
+    const grouped = Object.values(
+        filtered.reduce((groups, reservation) => {
+            const key = reservation.event.id;
+            if (!groups[key]) {
+                groups[key] = { event: reservation.event, reservations: [] };
+            }
+            groups[key].reservations.push(reservation);
+            return groups;
+        }, {})
+    );
+
     return (
         <div className="page ingressos">
             <div className="ingressos-header">
@@ -106,29 +120,41 @@ function MeusIngressos() {
             <div className="ingressos-list">
                 {loading ? (
                     Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} className="ingressos-card" />)
-                ) : filtered.length === 0 ? (
+                ) : grouped.length === 0 ? (
                     <p className="ingressos-empty">Nenhum ingresso encontrado.</p>
                 ) : (
-                    filtered.map((reservation) => (
+                    grouped.map((group) => (
                         <div
                             className="ingressos-card"
-                            key={reservation.id}
-                            onClick={() => navigate(`/ingressos/${reservation.id}`)}
+                            key={group.event.id}
+                            onClick={() => {
+                                if (group.reservations.length === 1) {
+                                    navigate(`/ingressos/${group.reservations[0].id}`);
+                                } else {
+                                    navigate(`/meus-ingressos/evento/${group.event.id}`, {
+                                        state: { event: group.event, reservations: group.reservations },
+                                    });
+                                }
+                            }}
                         >
                             <div
                                 className="ingressos-card-media"
                                 style={
-                                    reservation.event.imageUrl
-                                        ? { backgroundImage: `url(${reservation.event.imageUrl})` }
+                                    group.event.imageUrl
+                                        ? { backgroundImage: `url(${group.event.imageUrl})` }
                                         : undefined
                                 }
-                            ></div>
+                            >
+                                {group.reservations.length > 1 && (
+                                    <span className="ingressos-card-count">{group.reservations.length} ingressos</span>
+                                )}
+                            </div>
                             <div className="ingressos-card-body">
                                 <span className="ingressos-date">
-                                    {formatDate(reservation.event.date)} · {formatTime(reservation.event.date)}
+                                    {formatDate(group.event.date)} · {formatTime(group.event.date)}
                                 </span>
-                                <h3 className="ingressos-card-title">{reservation.event.title}</h3>
-                                <p className="ingressos-card-location">{reservation.event.location}</p>
+                                <h3 className="ingressos-card-title">{group.event.title}</h3>
+                                <p className="ingressos-card-location">{group.event.location}</p>
                             </div>
                         </div>
                     ))

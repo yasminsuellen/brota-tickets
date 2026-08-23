@@ -112,11 +112,19 @@ router.post('/', requireAuth, requireRole('CLIENTE'), async (req, res) => {
                 throw { status: 409, message: 'Ingressos insuficientes para essa quantidade.' };
             }
 
-            const reservation = await tx.reservation.create({
-                data: { eventId, quantity: Number(quantity), status: 'PENDENTE', userId: req.user.id },
-            });
+            // One reservation (and one QR) per ticket, same as seat-map,
+            // so each can be validated and shared independently.
+            const created = [];
 
-            return [reservation];
+            for (let i = 0; i < Number(quantity); i++) {
+                created.push(
+                    await tx.reservation.create({
+                        data: { eventId, quantity: 1, status: 'PENDENTE', userId: req.user.id },
+                    })
+                );
+            }
+
+            return created;
         });
 
         res.status(201).json({ reservations });

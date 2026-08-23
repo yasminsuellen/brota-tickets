@@ -99,9 +99,9 @@ function Pagamento() {
                 <span className="pagamento-card-label">Confirme seu pedido</span>
                 <h2>{event.title}</h2>
 
-                {reservations.map((reservation) => (
+                {reservations.map((reservation, i) => (
                     <div className="pagamento-line" key={reservation.id}>
-                        <span>{reservation.seatCode ? `Assento ${reservation.seatCode}` : `${reservation.quantity} ingressos`}</span>
+                        <span>{reservation.seatCode ? `Assento ${reservation.seatCode}` : `Ingresso ${i + 1}`}</span>
                         <span>{currency.format(lineTotal(reservation))}</span>
                     </div>
                 ))}
