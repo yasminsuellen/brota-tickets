@@ -195,9 +195,9 @@
 }
 
 .painel-table-actions {
-    text-align: right;
+    text-align: left;
     display: flex;
-    justify-content: flex-end;
+    justify-content: flex-start;
     gap: var(--space-2);
 }
 
