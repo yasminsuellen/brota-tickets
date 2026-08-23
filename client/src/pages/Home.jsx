@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import heroImage from '../assets/hero.png';
+import promoImage from '../assets/home.jpg';
 import './Home.css';
 
 function Home() {
@@ -81,7 +82,7 @@ function Home() {
 
             <div className="page home-section">
                 <div className="home-promo">
-                    <div className="home-promo-media"></div>
+                    <div className="home-promo-media" style={{ backgroundImage: `url(${promoImage})` }}></div>
                     <div className="home-promo-body">
                         <span className="home-promo-eyebrow">A vida acontece ao vivo</span>
                         <h2>Tem sempre algo rolando</h2>

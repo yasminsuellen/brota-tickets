@@ -4,16 +4,25 @@
 }
 
 .login-photo {
+    position: relative;
     flex: 0 0 65%;
     background-size: cover;
-    background-position: 0% 30%;
+    background-position: center top;
     background-repeat: no-repeat;
     display: flex;
     align-items: flex-end;
     padding: var(--space-6);
 }
 
+.login-photo::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(28, 20, 36, 0.45) 0%, rgba(28, 20, 36, 0.3) 100%);
+}
+
 .login-brand {
+    position: relative;
     width: 250px;
     height: auto;
 }
@@ -92,6 +101,7 @@
     .login-photo {
         flex: 0 0 auto;
         min-height: 240px;
+        background-position: center bottom;
         padding-left: var(--space-7);
         padding-right: var(--space-7);
     }

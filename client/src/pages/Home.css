@@ -68,11 +68,12 @@
 
 .home-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
     gap: var(--space-5);
 }
 
 .home-card {
+    height: 310px;
     border: 1px solid var(--color-line);
     border-radius: 12px;
     overflow: hidden;
@@ -88,7 +89,7 @@
 
 .home-card-media {
     width: 100%;
-    height: 140px;
+    height: 200px;
     background-color: var(--color-line);
     background-size: cover;
     background-position: top;
@@ -104,26 +105,37 @@
     color: var(--color-accent-2);
     font-size: var(--text-sm);
     font-weight: 700;
+    margin-top: 0;
     margin-bottom: var(--space-1);
 }
 
 .home-card h3 {
-    font-family: var(--font-body);
+    display: block;
     text-transform: uppercase;
     font-size: var(--text-sm);
-    margin: var(--space-2) 0;
+    margin-top: var(--space-2);
+    margin-bottom: var(--space-2);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
 .home-card p {
-    margin: 0;
-    font-size: var(--text-sm);
+    display: block;
+    text-transform: uppercase;
     color: var(--color-ink);
+    font-size: var(--text-sm);
+    margin-top: 0;
+    margin-bottom: var(--space-3);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+@media (min-width: 860px) {
+    .home-card h3 {
+        font-family: var(--font-body);
+    }
 }
 
 .home-marquee-wrap {
@@ -199,7 +211,9 @@
 }
 
 .home-promo-media {
-    background: var(--color-bg);
+    background-color: var(--color-bg);
+    background-size: cover;
+    background-position: center 80%;
     min-height: 260px;
 }
 
@@ -278,8 +292,8 @@
 
 @media (max-width: 859px) {
     .home-hero {
-        padding-top: 110px;
-        padding-bottom: 80px;
+        padding-top: 140px;
+        padding-bottom: 220px;
     }
 
     .home-section-header h2 {
