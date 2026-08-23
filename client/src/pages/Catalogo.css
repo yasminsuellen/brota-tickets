@@ -25,6 +25,20 @@
     cursor: pointer;
 }
 
+.catalogo-em-branco {
+    display: inline-block;
+    margin-bottom: var(--space-6);
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    font-size: var(--text-sm);
+    color: var(--color-accent);
+    background: var(--color-surface);
+    border: 1px solid var(--color-accent);
+    border-radius: 8px;
+    padding: var(--space-3) var(--space-5);
+    text-decoration: none;
+}
+
 .catalogo-error {
     color: var(--color-accent-2);
     font-size: var(--text-sm);

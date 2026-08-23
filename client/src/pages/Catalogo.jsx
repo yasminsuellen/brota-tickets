@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import PageHeader from '../components/PageHeader';
 import { removeAccents } from '../utils/removeAccents';
@@ -71,6 +71,9 @@ function Catalogo() {
                 />
                 <button type="submit">Buscar</button>
             </form>
+            <Link to="/organizador/eventos/novo" className="catalogo-em-branco">
+                + Criar evento em branco
+            </Link>
             {error && <p className="catalogo-error">{error}</p>}
             <div className="catalogo-grid">
                 {events.map((event) => (
