@@ -171,7 +171,11 @@ function Organizador() {
                         </tr>
                     </thead>
                     <tbody>
-                        {filteredEvents.length === 0 ? (
+                        {loading ? (
+                            <tr>
+                                <td className="painel-empty" colSpan={6}>Carregando eventos...</td>
+                            </tr>
+                        ) : filteredEvents.length === 0 ? (
                             <tr>
                                 <td className="painel-empty" colSpan={6}>
                                     {events.length === 0 ? 'Nenhum evento publicado ainda.' : 'Nenhum evento encontrado.'}
