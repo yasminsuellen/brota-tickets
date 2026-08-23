@@ -85,18 +85,19 @@
 @media (max-width: 860px) {
     .topnav-toggle {
         display: flex;
+        position: relative;
+        z-index: 60;
     }
 
     .topnav-actions {
         display: none;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        right: 0;
+        position: fixed;
+        inset: 0;
+        z-index: 50;
         flex-direction: column;
         align-items: stretch;
         gap: var(--space-4);
-        padding: var(--space-5) var(--space-7);
+        padding: 110px var(--space-7) var(--space-7);
         background: var(--color-accent);
     }
 
@@ -107,5 +108,13 @@
     .topnav-links {
         flex-direction: column;
         gap: var(--space-4);
+    }
+
+    .topnav-links a {
+        font-size: var(--text-lg);
+    }
+
+    .topnav-actions button {
+        margin-top: auto;
     }
 }
