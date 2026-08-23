@@ -18,6 +18,7 @@ function GerenciarEvento() {
     const [capacity, setCapacity] = useState('');
     const [price, setPrice] = useState('');
     const [description, setDescription] = useState('');
+    const [imageUrl, setImageUrl] = useState('');
 
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
@@ -51,6 +52,7 @@ function GerenciarEvento() {
                 setCapacity(data.capacity);
                 setPrice(data.price);
                 setDescription(data.description || '');
+                setImageUrl(data.imageUrl || '');
             } catch (err) {
                 setError('Não foi possível carregar o evento. Tente novamente.');
             } finally {
@@ -80,6 +82,7 @@ function GerenciarEvento() {
                     title,
                     category,
                     description,
+                    imageUrl,
                     date: isoDate,
                     location,
                     capacity,
@@ -198,6 +201,12 @@ function GerenciarEvento() {
                             <label>
                                 Descrição
                                 <textarea value={description} onChange={(e) => setDescription(e.target.value)} />
+                            </label>
+                        </div>
+                        <div className="gerenciar-evento-row">
+                            <label>
+                                URL da imagem
+                                <input type="url" placeholder="https://..." value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} />
                             </label>
                         </div>
                         {saved && <p className="gerenciar-evento-success">Alterações salvas.</p>}

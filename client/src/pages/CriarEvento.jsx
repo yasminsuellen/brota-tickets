@@ -18,7 +18,7 @@ function CriarEvento() {
     const [capacity, setCapacity] = useState('');
     const [price, setPrice] = useState('');
     const [description, setDescription] = useState('');
-    const [imageUrl] = useState(selected?.image || '');
+    const [imageUrl, setImageUrl] = useState(selected?.image || '');
     const [error, setError] = useState('');
 
     const { token } = useAuth();
@@ -104,6 +104,12 @@ function CriarEvento() {
                     <label>
                         Descrição
                         <textarea placeholder="O que torna essa noite especial?" value={description} onChange={(e) => setDescription(e.target.value)} />
+                    </label>
+                </div>
+                <div className="criar-evento-row">
+                    <label>
+                        URL da imagem
+                        <input type="url" placeholder="https://..." value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} />
                     </label>
                 </div>
                 {error && <p className="criar-evento-error">{error}</p>}
