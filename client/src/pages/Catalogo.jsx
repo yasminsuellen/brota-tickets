@@ -6,6 +6,7 @@ import { removeAccents } from '../utils/removeAccents';
 import './Catalogo.css';
 
 const MONTHS = ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ'];
+const BATCH_SIZE = 50;
 
 function formatDateLabel(dateStr, timeStr) {
     if (!dateStr) return '';
@@ -51,7 +52,7 @@ function Catalogo() {
 
     // Ticketmaster's raw pages often contain duplicate titles (same show,
     // different dates), so this keeps pulling raw pages into a buffer until
-    // there are 10 unique events to show, or Ticketmaster runs out of pages.
+    // there are BATCH_SIZE unique events to show, or Ticketmaster runs out of pages.
     // shouldAbort lets a stale call (e.g. a StrictMode double-invoked effect,
     // or a newer search that started after this one) skip applying its result.
     async function loadBatch(searchKeyword, startPage, startBuffer, append, shouldAbort = () => false) {
@@ -62,7 +63,7 @@ function Catalogo() {
         let rawHasMore = true;
 
         try {
-            while (localBuffer.length < 10 && rawHasMore) {
+            while (localBuffer.length < BATCH_SIZE && rawHasMore) {
                 const result = await fetchRawPage(searchKeyword, nextPage);
                 localBuffer = [...localBuffer, ...result.unique];
                 nextPage += 1;
@@ -75,8 +76,8 @@ function Catalogo() {
 
         if (shouldAbort()) return;
 
-        const batch = localBuffer.slice(0, 10);
-        const remaining = localBuffer.slice(10);
+        const batch = localBuffer.slice(0, BATCH_SIZE);
+        const remaining = localBuffer.slice(BATCH_SIZE);
 
         setEvents((current) => (append ? [...current, ...batch] : batch));
         setBuffer(remaining);
@@ -87,7 +88,8 @@ function Catalogo() {
     useEffect(() => {
         let ignore = false;
         seenTitlesRef.current = new Set();
-        setLoading(true);
+        // loading already starts true, no need to set it again on mount
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- loadBatch clears the previous error before starting the fetch
         loadBatch('', 0, [], false, () => ignore).finally(() => {
             if (!ignore) setLoading(false);
         });
@@ -133,7 +135,18 @@ function Catalogo() {
             </Link>
             {error && <p className="catalogo-error">{error}</p>}
             {loading ? (
-                <p className="catalogo-loading">Carregando eventos...</p>
+                <div className="catalogo-list">
+                    {Array.from({ length: 10 }).map((_, i) => (
+                        <div className="catalogo-row" key={i} aria-hidden="true">
+                            <div className="skeleton catalogo-row-media"></div>
+                            <div className="catalogo-row-body">
+                                <div className="skeleton skeleton-line" style={{ width: '30%', marginBottom: 8 }}></div>
+                                <div className="skeleton skeleton-line" style={{ width: '60%', marginBottom: 8 }}></div>
+                                <div className="skeleton skeleton-line" style={{ width: '45%' }}></div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
             ) : (
                 <div className="catalogo-list">
                     {events.map((event) => (

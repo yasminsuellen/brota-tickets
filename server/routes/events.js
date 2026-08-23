@@ -12,7 +12,7 @@ router.get('/catalog', requireAuth, requireRole('ORGANIZADOR'), async (req, res)
     const url = new URL('https://app.ticketmaster.com/discovery/v2/events.json');
     url.searchParams.set('apikey', apiKey);
     url.searchParams.set('countryCode', 'BR');
-    url.searchParams.set('size', '50');
+    url.searchParams.set('size', '100');
     url.searchParams.set('page', String(pageNumber));
     if (keyword) {
         url.searchParams.set('keyword', keyword);
@@ -53,7 +53,7 @@ router.get('/catalog', requireAuth, requireRole('ORGANIZADOR'), async (req, res)
 router.get('/published', requireAuth, async (req, res) => {
     const { keyword, category, page } = req.query;
     const pageNumber = Number(page) || 0;
-    const pageSize = 10;
+    const pageSize = 50;
 
     const filters = [];
 
