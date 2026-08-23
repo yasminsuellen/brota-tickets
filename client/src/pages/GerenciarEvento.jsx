@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import PageHeader from '../components/PageHeader';
 import './GerenciarEvento.css';
@@ -7,6 +7,7 @@ import './GerenciarEvento.css';
 function GerenciarEvento() {
     const { id } = useParams();
     const { token } = useAuth();
+    const navigate = useNavigate();
 
     const [stats, setStats] = useState({ ticketsSold: 0, grossRevenue: 0, occupancy: 0 });
     const [title, setTitle] = useState('');
@@ -20,6 +21,7 @@ function GerenciarEvento() {
 
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
+    const [deleting, setDeleting] = useState(false);
     const [error, setError] = useState('');
     const [saved, setSaved] = useState(false);
 
@@ -100,6 +102,36 @@ function GerenciarEvento() {
         }
     }
 
+    async function handleDelete() {
+        const confirmed = window.confirm(
+            'Tem certeza que deseja excluir este evento? Essa ação não pode ser desfeita e removerá também as reservas e ingressos ligados a ele.'
+        );
+
+        if (!confirmed) return;
+
+        setError('');
+        setDeleting(true);
+
+        try {
+            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/events/${id}`, {
+                method: 'DELETE',
+                headers: { Authorization: `Bearer ${token}` },
+            });
+
+            if (!response.ok) {
+                const data = await response.json();
+                setError(data.error);
+                return;
+            }
+
+            navigate('/organizador');
+        } catch (err) {
+            setError('Não foi possível excluir o evento. Tente novamente.');
+        } finally {
+            setDeleting(false);
+        }
+    }
+
     const currency = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
 
     return (
@@ -169,7 +201,17 @@ function GerenciarEvento() {
                             </label>
                         </div>
                         {saved && <p className="gerenciar-evento-success">Alterações salvas.</p>}
-                        <button type="submit" disabled={saving}>Salvar alterações</button>
+                        <div className="gerenciar-evento-actions">
+                            <button type="submit" disabled={saving}>Salvar alterações</button>
+                            <button
+                                type="button"
+                                className="gerenciar-evento-delete"
+                                onClick={handleDelete}
+                                disabled={deleting}
+                            >
+                                Excluir evento
+                            </button>
+                        </div>
                     </form>
                 </>
             )}

@@ -90,6 +90,8 @@
     width: 100%;
     height: 140px;
     background-color: var(--color-line);
+    background-size: cover;
+    background-position: top;
 }
 
 .home-card-body {

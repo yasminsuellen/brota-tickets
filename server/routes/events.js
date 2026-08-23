@@ -97,13 +97,14 @@ router.get('/published/:id', requireAuth, requireRole('CLIENTE'), async (req, re
 });
 
 router.post('/', requireAuth, requireRole('ORGANIZADOR'), async (req, res) => {
-    const { title, category, description, date, location, capacity, price } = req.body;
+    const { title, category, description, imageUrl, date, location, capacity, price } = req.body;
 
     const event = await prisma.event.create({
         data: {
             title,
             category,
             description,
+            imageUrl,
             date: new Date(date),
             location,
             capacity: Number(capacity),
@@ -195,7 +196,7 @@ router.put('/:id', requireAuth, requireRole('ORGANIZADOR'), async (req, res) => 
         return res.status(404).json({ error: 'Evento não encontrado.' });
     }
 
-    const { title, category, description, date, location, capacity, price } = req.body;
+    const { title, category, description, imageUrl, date, location, capacity, price } = req.body;
 
     const event = await prisma.event.update({
         where: { id: req.params.id },
@@ -203,6 +204,7 @@ router.put('/:id', requireAuth, requireRole('ORGANIZADOR'), async (req, res) => 
             title,
             category,
             description,
+            imageUrl,
             date: new Date(date),
             location,
             capacity: Number(capacity),
@@ -211,6 +213,18 @@ router.put('/:id', requireAuth, requireRole('ORGANIZADOR'), async (req, res) => 
     });
 
     res.json(event);
+});
+
+router.delete('/:id', requireAuth, requireRole('ORGANIZADOR'), async (req, res) => {
+    const existing = await prisma.event.findUnique({ where: { id: req.params.id } });
+
+    if (!existing || existing.organizerId !== req.user.id) {
+        return res.status(404).json({ error: 'Evento não encontrado.' });
+    }
+
+    await prisma.event.delete({ where: { id: req.params.id } });
+
+    res.status(204).end();
 });
 
 module.exports = router;

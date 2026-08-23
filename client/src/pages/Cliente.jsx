@@ -86,7 +86,10 @@ function Cliente() {
                 ) : (
                     events.map((event) => (
                         <div className="cliente-card" key={event.id} onClick={() => navigate(`/eventos/${event.id}`)}>
-                            <div className="cliente-card-media"></div>
+                            <div
+                                className="cliente-card-media"
+                                style={event.imageUrl ? { backgroundImage: `url(${event.imageUrl})` } : undefined}
+                            ></div>
                             <div className="cliente-card-body">
                                 <span className="cliente-date">
                                     {event.date?.slice(0, 10)} · {currency.format(event.price)}

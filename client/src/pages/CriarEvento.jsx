@@ -18,6 +18,7 @@ function CriarEvento() {
     const [capacity, setCapacity] = useState('');
     const [price, setPrice] = useState('');
     const [description, setDescription] = useState('');
+    const [imageUrl] = useState(selected?.image || '');
     const [error, setError] = useState('');
 
     const { token } = useAuth();
@@ -40,6 +41,7 @@ function CriarEvento() {
                     title,
                     category,
                     description,
+                    imageUrl,
                     date: isoDate,
                     location: venue,
                     capacity,

@@ -89,7 +89,14 @@ function MeusIngressos() {
                             key={reservation.id}
                             onClick={() => navigate(`/ingressos/${reservation.id}`)}
                         >
-                            <div className="ingressos-card-media"></div>
+                            <div
+                                className="ingressos-card-media"
+                                style={
+                                    reservation.event.imageUrl
+                                        ? { backgroundImage: `url(${reservation.event.imageUrl})` }
+                                        : undefined
+                                }
+                            ></div>
                             <div className="ingressos-card-body">
                                 <span className="ingressos-date">
                                     {reservation.event.date?.slice(0, 10)} · {reservation.event.date?.slice(11, 16)}

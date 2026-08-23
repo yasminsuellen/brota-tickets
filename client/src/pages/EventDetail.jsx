@@ -66,7 +66,10 @@ function EventDetail() {
             <div className="event-detail-grid">
                 <div className="event-detail-main">
                     <h1>{event.title}</h1>
-                    <div className="event-detail-media"></div>
+                    <div
+                        className="event-detail-media"
+                        style={event.imageUrl ? { backgroundImage: `url(${event.imageUrl})` } : undefined}
+                    ></div>
 
                     {event.description && (
                         <>

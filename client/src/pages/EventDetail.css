@@ -68,7 +68,9 @@
     flex: 1;
     min-height: 320px;
     border-radius: 12px;
-    background: var(--color-line);
+    background-color: var(--color-line);
+    background-size: cover;
+    background-position: center;
 }
 
 .event-detail-main h2 {

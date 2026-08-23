@@ -34,6 +34,7 @@ model Event {
   title       String
   category    String?
   description String?
+  imageUrl    String?
   date        DateTime
   location    String
   capacity    Int
@@ -55,7 +56,7 @@ model Reservation {
   userId  String
   user    User  @relation(fields: [userId], references: [id])
   eventId String
-  event   Event @relation(fields: [eventId], references: [id])
+  event   Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
   ticket  Ticket?
 }
 
@@ -67,5 +68,5 @@ model Ticket {
   createdAt     DateTime  @default(now())
 
   reservationId String      @unique
-  reservation   Reservation @relation(fields: [reservationId], references: [id])
+  reservation   Reservation @relation(fields: [reservationId], references: [id], onDelete: Cascade)
 }

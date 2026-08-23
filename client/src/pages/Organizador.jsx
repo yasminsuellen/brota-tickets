@@ -8,6 +8,7 @@ function Organizador() {
     const [events, setEvents] = useState([]);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(true);
+    const [deletingId, setDeletingId] = useState(null);
     const { user, token } = useAuth();
 
     useEffect(() => {
@@ -44,6 +45,36 @@ function Organizador() {
 
         fetchDashboard();
     }, [token]);
+
+    async function handleDelete(eventId) {
+        const confirmed = window.confirm(
+            'Tem certeza que deseja excluir este evento? Essa ação não pode ser desfeita e removerá também as reservas e ingressos ligados a ele.'
+        );
+
+        if (!confirmed) return;
+
+        setError('');
+        setDeletingId(eventId);
+
+        try {
+            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/events/${eventId}`, {
+                method: 'DELETE',
+                headers: { Authorization: `Bearer ${token}` },
+            });
+
+            if (!response.ok) {
+                const data = await response.json();
+                setError(data.error);
+                return;
+            }
+
+            setEvents((current) => current.filter((event) => event.id !== eventId));
+        } catch (err) {
+            setError('Não foi possível excluir o evento. Tente novamente.');
+        } finally {
+            setDeletingId(null);
+        }
+    }
 
     const proximoEvento = events.find((event) => new Date(event.date) >= new Date());
     const currency = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
@@ -88,7 +119,7 @@ function Organizador() {
                 <table className="painel-table">
                     <thead>
                         <tr>
-                            <th>Evento</th>
+                            <th className="painel-col-evento">Evento</th>
                             <th>Data</th>
                             <th>Local</th>
                             <th>Capacidade</th>
@@ -104,19 +135,33 @@ function Organizador() {
                         ) : (
                             events.map((event) => (
                                 <tr key={event.id}>
-                                    <td>{event.title}</td>
+                                    <td className="painel-col-evento" title={event.title}>{event.title}</td>
                                     <td>{event.date?.slice(0, 10)}</td>
                                     <td>{event.location}</td>
                                     <td>{event.capacity}</td>
                                     <td>{currency.format(event.price)}</td>
                                     <td className="painel-table-actions">
-                                        <Link to={`/organizador/eventos/${event.id}`} className="painel-gerenciar-btn" aria-label="Gerenciar evento">
+                                        <Link to={`/organizador/eventos/${event.id}`} className="painel-icon-btn" aria-label="Gerenciar evento">
                                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                                 <path d="M12 20h9"></path>
                                                 <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"></path>
                                             </svg>
-                                            Gerenciar
                                         </Link>
+                                        <button
+                                            type="button"
+                                            className="painel-icon-btn painel-icon-btn-delete"
+                                            aria-label="Excluir evento"
+                                            onClick={() => handleDelete(event.id)}
+                                            disabled={deletingId === event.id}
+                                        >
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                                <path d="M3 6h18"></path>
+                                                <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                                <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path>
+                                                <path d="M10 11v6"></path>
+                                                <path d="M14 11v6"></path>
+                                            </svg>
+                                        </button>
                                     </td>
                                 </tr>
                             ))

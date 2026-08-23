@@ -49,7 +49,10 @@ function Home() {
                 <div className="home-grid">
                     {events.map((event) => (
                         <div className="home-card" key={event.id} onClick={() => navigate(`/eventos/${event.id}`)}>
-                            <div className="home-card-media"></div>
+                            <div
+                                className="home-card-media"
+                                style={event.imageUrl ? { backgroundImage: `url(${event.imageUrl})` } : undefined}
+                            ></div>
                             <div className="home-card-body">
                                 <span className="home-date">
                                     {event.date?.slice(0, 10)} · {currency.format(event.price)}

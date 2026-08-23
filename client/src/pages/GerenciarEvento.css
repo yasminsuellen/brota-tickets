@@ -121,6 +121,17 @@
     cursor: default;
 }
 
+.gerenciar-evento-actions {
+    display: flex;
+    gap: var(--space-4);
+}
+
+.gerenciar-evento-delete {
+    background: transparent;
+    color: var(--color-accent-2);
+    border: 1px solid var(--color-accent-2);
+}
+
 @media (max-width: 600px) {
     .gerenciar-evento-row {
         grid-template-columns: 1fr;

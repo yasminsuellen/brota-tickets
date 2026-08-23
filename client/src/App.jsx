@@ -20,9 +20,9 @@ function App() {
     <Layout>
       <Routes>
         <Route path="/login" element={<Login />} />
-        <Route path="/" element={<ProtectedRoute role="CLIENTE"><Home /></ProtectedRoute>} />
-        <Route path="/eventos" element={<ProtectedRoute role="CLIENTE"><Cliente /></ProtectedRoute>} />
-        <Route path="/eventos/:id" element={<ProtectedRoute role="CLIENTE"><EventDetail /></ProtectedRoute>} />
+        <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
+        <Route path="/eventos" element={<ProtectedRoute><Cliente /></ProtectedRoute>} />
+        <Route path="/eventos/:id" element={<ProtectedRoute><EventDetail /></ProtectedRoute>} />
         <Route path="/eventos/:id/reservar" element={<ProtectedRoute role="CLIENTE"><Reservar /></ProtectedRoute>} />
         <Route path="/reservas/:id/pagamento" element={<ProtectedRoute role="CLIENTE"><Pagamento /></ProtectedRoute>} />
         <Route path="/meus-ingressos" element={<ProtectedRoute role="CLIENTE"><MeusIngressos /></ProtectedRoute>} />

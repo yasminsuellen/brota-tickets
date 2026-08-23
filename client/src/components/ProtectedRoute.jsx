@@ -14,7 +14,7 @@ function ProtectedRoute({ role, children }) {
     return <Navigate to="/login" replace />;
   }
 
-  if (user.role !== role) {
+  if (role && user.role !== role) {
     return <Navigate to={roleHome[user.role]} replace />;
   }
 
