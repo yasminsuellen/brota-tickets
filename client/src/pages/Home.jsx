@@ -1,16 +1,22 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import heroImage from '../assets/hero.png';
 import promoImage from '../assets/home.jpg';
 import SkeletonCard from '../components/SkeletonCard';
+import { formatDate } from '../utils/formatDateTime';
 import './Home.css';
+
+const PREVIEW_POOL_SIZE = 15;
+const PREVIEW_ROWS = 2;
 
 function Home() {
     const [events, setEvents] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [visibleCount, setVisibleCount] = useState(PREVIEW_ROWS * 3);
     const { token } = useAuth();
     const navigate = useNavigate();
+    const gridRef = useRef(null);
 
     useEffect(() => {
         async function fetchEvents() {
@@ -22,7 +28,7 @@ function Home() {
                 const data = await response.json();
 
                 if (response.ok) {
-                    setEvents(data.events.slice(0, 3));
+                    setEvents(data.events.slice(0, PREVIEW_POOL_SIZE));
                 }
             } catch (err) {
                 // silently ignore, preview section just stays empty
@@ -33,6 +39,23 @@ function Home() {
 
         fetchEvents();
     }, [token]);
+
+    // Fills exactly PREVIEW_ROWS rows of the auto-fill grid, whatever the
+    // actual column count ends up being at the current screen width.
+    useEffect(() => {
+        const gridEl = gridRef.current;
+        if (!gridEl) return;
+
+        function updateVisibleCount() {
+            const columns = getComputedStyle(gridEl).gridTemplateColumns.split(' ').filter(Boolean).length;
+            setVisibleCount(Math.max(columns, 1) * PREVIEW_ROWS);
+        }
+
+        updateVisibleCount();
+        const observer = new ResizeObserver(updateVisibleCount);
+        observer.observe(gridEl);
+        return () => observer.disconnect();
+    }, []);
 
     const currency = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
 
@@ -51,10 +74,10 @@ function Home() {
                     <Link to="/eventos">Ver tudo →</Link>
                 </div>
 
-                <div className="home-grid">
+                <div className="home-grid" ref={gridRef}>
                     {loading
-                        ? Array.from({ length: 3 }).map((_, i) => <SkeletonCard key={i} className="home-card" />)
-                        : events.map((event) => (
+                        ? Array.from({ length: visibleCount }).map((_, i) => <SkeletonCard key={i} className="home-card" />)
+                        : events.slice(0, visibleCount).map((event) => (
                             <div className="home-card" key={event.id} onClick={() => navigate(`/eventos/${event.id}`)}>
                                 <div
                                     className="home-card-media"
@@ -62,7 +85,7 @@ function Home() {
                                 ></div>
                                 <div className="home-card-body">
                                     <span className="home-date">
-                                        {event.date?.slice(0, 10)} · {currency.format(event.price)}
+                                        {formatDate(event.date)} · {currency.format(event.price)}
                                     </span>
                                     <h3>{event.title}</h3>
                                     <p>{event.location}</p>
