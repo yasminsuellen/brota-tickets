@@ -95,12 +95,6 @@
     appearance: textfield;
 }
 
-.gerenciar-evento-success {
-    color: var(--color-accent);
-    font-size: var(--text-sm);
-    margin: 0;
-}
-
 .gerenciar-evento button {
     font-family: var(--font-display);
     text-transform: uppercase;

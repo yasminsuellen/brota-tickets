@@ -24,7 +24,6 @@ function GerenciarEvento() {
     const [saving, setSaving] = useState(false);
     const [deleting, setDeleting] = useState(false);
     const [error, setError] = useState('');
-    const [saved, setSaved] = useState(false);
 
     useEffect(() => {
         async function fetchEvent() {
@@ -66,7 +65,6 @@ function GerenciarEvento() {
     async function handleSubmit(e) {
         e.preventDefault();
         setError('');
-        setSaved(false);
         setSaving(true);
 
         const isoDate = time ? `${date}T${time}` : date;
@@ -97,7 +95,7 @@ function GerenciarEvento() {
                 return;
             }
 
-            setSaved(true);
+            navigate('/organizador');
         } catch (err) {
             setError('Não foi possível salvar as alterações. Tente novamente.');
         } finally {
@@ -226,7 +224,6 @@ function GerenciarEvento() {
                                 <input type="url" placeholder="https://..." value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} />
                             </label>
                         </div>
-                        {saved && <p className="gerenciar-evento-success">Alterações salvas.</p>}
                         <div className="gerenciar-evento-actions">
                             <button type="submit" disabled={saving}>Salvar alterações</button>
                             <button
