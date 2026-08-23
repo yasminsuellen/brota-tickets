@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, useNavigate, useLocation, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import './Reservar.css';
 
@@ -7,10 +7,11 @@ function Reservar() {
     const { id } = useParams();
     const { token } = useAuth();
     const navigate = useNavigate();
+    const location = useLocation();
 
     const [event, setEvent] = useState(null);
     const [selectedSeats, setSelectedSeats] = useState([]);
-    const [quantity, setQuantity] = useState(1);
+    const [quantity, setQuantity] = useState(location.state?.quantity || 1);
     const [error, setError] = useState('');
     const [submitting, setSubmitting] = useState(false);
 
