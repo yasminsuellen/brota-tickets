@@ -106,14 +106,16 @@ function CriarEvento() {
                         <textarea placeholder="O que torna essa noite especial?" value={description} onChange={(e) => setDescription(e.target.value)} />
                     </label>
                 </div>
-                <div className="criar-evento-row">
+                {error && <p className="criar-evento-error">{error}</p>}
+                <div className="criar-evento-row criar-evento-row-image">
                     <label>
                         URL da imagem
                         <input type="url" placeholder="https://..." value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} />
                     </label>
+                    <div className="criar-evento-actions">
+                        <button type="submit">Publicar evento</button>
+                    </div>
                 </div>
-                {error && <p className="criar-evento-error">{error}</p>}
-                <button type="submit">Publicar evento</button>
             </form>
         </div>
     );

@@ -10,6 +10,19 @@
     gap: var(--space-4);
 }
 
+.criar-evento-row-image {
+    align-items: end;
+}
+
+.criar-evento-actions {
+    display: flex;
+    width: 100%;
+}
+
+.criar-evento-actions button {
+    flex: 1;
+}
+
 .criar-evento-row label:first-child {
     position: relative;
     top: 2px;
@@ -83,5 +96,19 @@
 @media (max-width: 600px) {
     .criar-evento-row {
         grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 859px) {
+    .criar-evento-row-image {
+        grid-template-columns: 1fr;
+    }
+
+    .criar-evento-actions {
+        margin-top: var(--space-4);
+    }
+
+    .criar-evento-actions button {
+        width: 100%;
     }
 }
