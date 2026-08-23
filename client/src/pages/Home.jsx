@@ -3,10 +3,12 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import heroImage from '../assets/hero.png';
 import promoImage from '../assets/home.jpg';
+import SkeletonCard from '../components/SkeletonCard';
 import './Home.css';
 
 function Home() {
     const [events, setEvents] = useState([]);
+    const [loading, setLoading] = useState(true);
     const { token } = useAuth();
     const navigate = useNavigate();
 
@@ -24,6 +26,8 @@ function Home() {
                 }
             } catch (err) {
                 // silently ignore, preview section just stays empty
+            } finally {
+                setLoading(false);
             }
         }
 
@@ -48,21 +52,23 @@ function Home() {
                 </div>
 
                 <div className="home-grid">
-                    {events.map((event) => (
-                        <div className="home-card" key={event.id} onClick={() => navigate(`/eventos/${event.id}`)}>
-                            <div
-                                className="home-card-media"
-                                style={event.imageUrl ? { backgroundImage: `url(${event.imageUrl})` } : undefined}
-                            ></div>
-                            <div className="home-card-body">
-                                <span className="home-date">
-                                    {event.date?.slice(0, 10)} · {currency.format(event.price)}
-                                </span>
-                                <h3>{event.title}</h3>
-                                <p>{event.location}</p>
+                    {loading
+                        ? Array.from({ length: 3 }).map((_, i) => <SkeletonCard key={i} className="home-card" />)
+                        : events.map((event) => (
+                            <div className="home-card" key={event.id} onClick={() => navigate(`/eventos/${event.id}`)}>
+                                <div
+                                    className="home-card-media"
+                                    style={event.imageUrl ? { backgroundImage: `url(${event.imageUrl})` } : undefined}
+                                ></div>
+                                <div className="home-card-body">
+                                    <span className="home-date">
+                                        {event.date?.slice(0, 10)} · {currency.format(event.price)}
+                                    </span>
+                                    <h3>{event.title}</h3>
+                                    <p>{event.location}</p>
+                                </div>
                             </div>
-                        </div>
-                    ))}
+                        ))}
                 </div>
             </div>
 

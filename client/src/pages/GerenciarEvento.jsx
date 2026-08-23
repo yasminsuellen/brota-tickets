@@ -143,6 +143,23 @@ function GerenciarEvento() {
 
             {error && <p className="gerenciar-evento-error">{error}</p>}
 
+            {loading && (
+                <div className="gerenciar-evento-cards">
+                    <div className="gerenciar-evento-stat-card">
+                        <span className="gerenciar-evento-stat-label">Ingressos vendidos</span>
+                        <span className="skeleton skeleton-line" style={{ width: '50%' }}></span>
+                    </div>
+                    <div className="gerenciar-evento-stat-card">
+                        <span className="gerenciar-evento-stat-label">Receita bruta</span>
+                        <span className="skeleton skeleton-line" style={{ width: '50%' }}></span>
+                    </div>
+                    <div className="gerenciar-evento-stat-card">
+                        <span className="gerenciar-evento-stat-label">Ocupação</span>
+                        <span className="skeleton skeleton-line" style={{ width: '50%' }}></span>
+                    </div>
+                </div>
+            )}
+
             {!loading && (
                 <>
                     <div className="gerenciar-evento-cards">

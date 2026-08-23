@@ -48,7 +48,30 @@ function EventDetail() {
     }
 
     if (!event) {
-        return null;
+        return (
+            <div className="page event-detail">
+                <div className="event-detail-topline">
+                    <Link to="/eventos" className="event-detail-back">← Voltar</Link>
+                    <div className="event-detail-meta">
+                        <span className="skeleton skeleton-line" style={{ width: '160px' }}></span>
+                        <span className="skeleton skeleton-line" style={{ width: '220px', marginTop: 8 }}></span>
+                    </div>
+                </div>
+
+                <div className="event-detail-grid">
+                    <div className="event-detail-main">
+                        <div className="skeleton skeleton-line" style={{ width: '70%', height: 32, marginBottom: 16 }}></div>
+                        <div className="skeleton event-detail-media"></div>
+                    </div>
+
+                    <div className="event-detail-sidebar">
+                        <div className="skeleton skeleton-line" style={{ width: '80%', height: 24, marginBottom: 12 }}></div>
+                        <div className="skeleton skeleton-line" style={{ width: '40%', marginBottom: 16 }}></div>
+                        <div className="skeleton event-detail-map"></div>
+                    </div>
+                </div>
+            </div>
+        );
     }
 
     return (

@@ -28,6 +28,25 @@ textarea:focus {
   padding: var(--space-7);
 }
 
+.skeleton {
+  background: var(--color-line);
+  animation: skeleton-pulse 1.2s ease-in-out infinite;
+}
+
+.skeleton-line {
+  height: 12px;
+  border-radius: 4px;
+}
+
+@keyframes skeleton-pulse {
+  0%, 100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
 @media (max-width: 859px) {
   .page {
     padding-left: var(--space-6);

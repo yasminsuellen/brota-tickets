@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import SkeletonCard from '../components/SkeletonCard';
 import './MeusIngressos.css';
 
 const CATEGORIES = ['Tudo', 'Shows', 'Festivais', 'Teatro', 'Festas'];
@@ -9,6 +10,7 @@ function MeusIngressos() {
     const [category, setCategory] = useState('Tudo');
     const [keyword, setKeyword] = useState('');
     const [reservations, setReservations] = useState([]);
+    const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const { token } = useAuth();
     const navigate = useNavigate();
@@ -32,6 +34,8 @@ function MeusIngressos() {
                 setReservations(data.reservations);
             } catch (err) {
                 setError('Não foi possível buscar seus ingressos. Tente novamente.');
+            } finally {
+                setLoading(false);
             }
         }
 
@@ -80,7 +84,9 @@ function MeusIngressos() {
             {error && <p className="ingressos-error">{error}</p>}
 
             <div className="ingressos-list">
-                {filtered.length === 0 ? (
+                {loading ? (
+                    Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} className="ingressos-card" />)
+                ) : filtered.length === 0 ? (
                     <p className="ingressos-empty">Nenhum ingresso encontrado.</p>
                 ) : (
                     filtered.map((reservation) => (

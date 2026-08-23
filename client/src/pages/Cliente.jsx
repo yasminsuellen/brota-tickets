@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import SkeletonCard from '../components/SkeletonCard';
 import './Cliente.css';
 
 const CATEGORIES = ['Tudo', 'Shows', 'Festivais', 'Teatro', 'Festas'];
@@ -11,6 +12,7 @@ function Cliente() {
     const [events, setEvents] = useState([]);
     const [page, setPage] = useState(0);
     const [hasMore, setHasMore] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [loadingMore, setLoadingMore] = useState(false);
     const [error, setError] = useState('');
     const { token } = useAuth();
@@ -45,13 +47,17 @@ function Cliente() {
     }
 
     useEffect(() => {
-        fetchEvents(keyword, category, 0, false);
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- resetting the skeleton on every category change, not just mount
+        setLoading(true);
+        fetchEvents(keyword, category, 0, false).finally(() => setLoading(false));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [category]);
 
-    function handleSearch(e) {
+    async function handleSearch(e) {
         e.preventDefault();
-        fetchEvents(keyword, category, 0, false);
+        setLoading(true);
+        await fetchEvents(keyword, category, 0, false);
+        setLoading(false);
     }
 
     async function handleLoadMore() {
@@ -93,7 +99,9 @@ function Cliente() {
             {error && <p className="cliente-error">{error}</p>}
 
             <div className="cliente-grid">
-                {events.length === 0 ? (
+                {loading ? (
+                    Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} className="cliente-card" />)
+                ) : events.length === 0 ? (
                     <p className="cliente-empty">Nenhum evento encontrado.</p>
                 ) : (
                     events.map((event) => (

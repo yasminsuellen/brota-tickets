@@ -104,7 +104,7 @@ function Organizador() {
 
             <div className="painel-cards">
                 {loading ? (
-                    <div className="painel-proximo painel-proximo-skeleton" aria-hidden="true"></div>
+                    <div className="painel-proximo skeleton" aria-hidden="true"></div>
                 ) : (
                     proximoEvento && (
                         <div className="painel-proximo">
@@ -117,15 +117,27 @@ function Organizador() {
                 )}
                 <div className="painel-stat-card">
                     <span className="painel-stat-label">Ingressos vendidos</span>
-                    <span className="painel-stat-value">{stats.ticketsSold}</span>
+                    {loading ? (
+                        <span className="skeleton skeleton-line" style={{ width: '50%' }}></span>
+                    ) : (
+                        <span className="painel-stat-value">{stats.ticketsSold}</span>
+                    )}
                 </div>
                 <div className="painel-stat-card">
                     <span className="painel-stat-label">Receita bruta</span>
-                    <span className="painel-stat-value">{currency.format(stats.grossRevenue)}</span>
+                    {loading ? (
+                        <span className="skeleton skeleton-line" style={{ width: '50%' }}></span>
+                    ) : (
+                        <span className="painel-stat-value">{currency.format(stats.grossRevenue)}</span>
+                    )}
                 </div>
                 <div className="painel-stat-card">
                     <span className="painel-stat-label">Ocupação</span>
-                    <span className="painel-stat-value">{stats.occupancy}%</span>
+                    {loading ? (
+                        <span className="skeleton skeleton-line" style={{ width: '50%' }}></span>
+                    ) : (
+                        <span className="painel-stat-value">{stats.occupancy}%</span>
+                    )}
                 </div>
             </div>
 
