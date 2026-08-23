@@ -6,6 +6,12 @@ body {
   margin: 0;
   scrollbar-gutter: stable;
   scrollbar-width: none;
+  user-select: none;
+}
+
+input,
+textarea {
+  user-select: text;
 }
 
 ::-webkit-scrollbar {
@@ -18,7 +24,8 @@ body {
 }
 
 input:focus,
-textarea:focus {
+textarea:focus,
+select:focus {
   outline: none;
   border-color: var(--color-accent-2);
   box-shadow: 0 0 0 1px color-mix(in srgb, var(--color-accent-2) 80%, transparent);
