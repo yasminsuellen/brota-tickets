@@ -9,16 +9,20 @@ function Cliente() {
     const [category, setCategory] = useState('Tudo');
     const [keyword, setKeyword] = useState('');
     const [events, setEvents] = useState([]);
+    const [page, setPage] = useState(0);
+    const [hasMore, setHasMore] = useState(false);
+    const [loadingMore, setLoadingMore] = useState(false);
     const [error, setError] = useState('');
     const { token } = useAuth();
     const navigate = useNavigate();
 
-    async function fetchEvents(searchKeyword, searchCategory) {
+    async function fetchEvents(searchKeyword, searchCategory, pageNumber, append) {
         setError('');
 
         const params = new URLSearchParams();
         if (searchKeyword) params.set('keyword', searchKeyword);
         if (searchCategory && searchCategory !== 'Tudo') params.set('category', searchCategory);
+        params.set('page', pageNumber);
 
         try {
             const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/events/published?${params}`, {
@@ -32,20 +36,28 @@ function Cliente() {
                 return;
             }
 
-            setEvents(data.events);
+            setEvents((current) => (append ? [...current, ...data.events] : data.events));
+            setPage(pageNumber);
+            setHasMore(data.hasMore);
         } catch (err) {
             setError('Não foi possível buscar eventos. Tente novamente.');
         }
     }
 
     useEffect(() => {
-        fetchEvents(keyword, category);
+        fetchEvents(keyword, category, 0, false);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [category]);
 
     function handleSearch(e) {
         e.preventDefault();
-        fetchEvents(keyword, category);
+        fetchEvents(keyword, category, 0, false);
+    }
+
+    async function handleLoadMore() {
+        setLoadingMore(true);
+        await fetchEvents(keyword, category, page + 1, true);
+        setLoadingMore(false);
     }
 
     const currency = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
@@ -101,6 +113,16 @@ function Cliente() {
                     ))
                 )}
             </div>
+            {hasMore && (
+                <button
+                    type="button"
+                    className="cliente-ver-mais"
+                    onClick={handleLoadMore}
+                    disabled={loadingMore}
+                >
+                    {loadingMore ? 'Carregando...' : 'Ver mais'}
+                </button>
+            )}
         </div>
     );
 }

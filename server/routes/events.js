@@ -5,13 +5,15 @@ const prisma = require('../lib/prisma');
 const { getReservationType, generateSeatCodes } = require('../utils/seatMap');
 
 router.get('/catalog', requireAuth, requireRole('ORGANIZADOR'), async (req, res) => {
-    const { keyword } = req.query;
+    const { keyword, page } = req.query;
     const apiKey = process.env.TICKETMASTER_API_KEY;
+    const pageNumber = Number(page) || 0;
 
     const url = new URL('https://app.ticketmaster.com/discovery/v2/events.json');
     url.searchParams.set('apikey', apiKey);
     url.searchParams.set('countryCode', 'BR');
-    url.searchParams.set('size', '12');
+    url.searchParams.set('size', '10');
+    url.searchParams.set('page', String(pageNumber));
     if (keyword) {
         url.searchParams.set('keyword', keyword);
     }
@@ -31,14 +33,19 @@ router.get('/catalog', requireAuth, requireRole('ORGANIZADOR'), async (req, res)
             category: event.classifications?.[0]?.segment?.name,
         }));
 
-        res.json({ events });
+        const totalPages = data.page?.totalPages ?? 0;
+        const hasMore = pageNumber + 1 < totalPages;
+
+        res.json({ events, hasMore });
     } catch (err) {
         res.status(502).json({ error: 'Não foi possível buscar eventos no Ticketmaster.' });
     }
 });
 
 router.get('/published', requireAuth, async (req, res) => {
-    const { keyword, category } = req.query;
+    const { keyword, category, page } = req.query;
+    const pageNumber = Number(page) || 0;
+    const pageSize = 10;
 
     const filters = [];
 
@@ -55,12 +62,21 @@ router.get('/published', requireAuth, async (req, res) => {
         filters.push({ category: { equals: category, mode: 'insensitive' } });
     }
 
-    const events = await prisma.event.findMany({
-        where: filters.length > 0 ? { AND: filters } : undefined,
-        orderBy: { date: 'asc' },
-    });
+    const where = filters.length > 0 ? { AND: filters } : undefined;
 
-    res.json({ events });
+    const [events, total] = await Promise.all([
+        prisma.event.findMany({
+            where,
+            orderBy: { date: 'asc' },
+            skip: pageNumber * pageSize,
+            take: pageSize,
+        }),
+        prisma.event.count({ where }),
+    ]);
+
+    const hasMore = (pageNumber + 1) * pageSize < total;
+
+    res.json({ events, hasMore });
 });
 
 router.get('/published/:id', requireAuth, requireRole('CLIENTE'), async (req, res) => {

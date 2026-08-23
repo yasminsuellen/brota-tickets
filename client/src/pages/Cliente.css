@@ -135,6 +135,25 @@
     margin: 0;
 }
 
+.cliente-ver-mais {
+    display: block;
+    margin: var(--space-6) auto 0;
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    font-size: var(--text-sm);
+    color: var(--color-accent);
+    background: var(--color-surface);
+    border: 1px solid var(--color-accent);
+    border-radius: 8px;
+    padding: var(--space-3) var(--space-6);
+    cursor: pointer;
+}
+
+.cliente-ver-mais:disabled {
+    opacity: 0.6;
+    cursor: default;
+}
+
 @media (max-width: 859px) {
     .cliente-header h1 {
         font-size: var(--text-lg);

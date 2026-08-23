@@ -8,15 +8,19 @@ import './Catalogo.css';
 function Catalogo() {
     const [keyword, setKeyword] = useState('');
     const [events, setEvents] = useState([]);
+    const [page, setPage] = useState(0);
+    const [hasMore, setHasMore] = useState(false);
+    const [loadingMore, setLoadingMore] = useState(false);
     const [error, setError] = useState('');
     const { token } = useAuth();
     const navigate = useNavigate();
 
-    async function fetchEvents(searchKeyword) {
+    async function fetchEvents(searchKeyword, pageNumber, append) {
         setError('');
 
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/events/catalog?keyword=${encodeURIComponent(searchKeyword)}`, {
+            const params = new URLSearchParams({ keyword: searchKeyword, page: pageNumber });
+            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/events/catalog?${params}`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
 
@@ -27,19 +31,28 @@ function Catalogo() {
                 return;
             }
 
-            setEvents(data.events);
+            setEvents((current) => (append ? [...current, ...data.events] : data.events));
+            setPage(pageNumber);
+            setHasMore(data.hasMore);
         } catch (err) {
             setError('Não foi possível buscar eventos. Tente novamente.');
         }
     }
 
     useEffect(() => {
-        fetchEvents('');
+        fetchEvents('', 0, false);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     function handleSearch(e) {
         e.preventDefault();
-        fetchEvents(keyword);
+        fetchEvents(keyword, 0, false);
+    }
+
+    async function handleLoadMore() {
+        setLoadingMore(true);
+        await fetchEvents(keyword, page + 1, true);
+        setLoadingMore(false);
     }
 
     function handleSelect(event) {
@@ -74,6 +87,16 @@ function Catalogo() {
                     </div>
                 ))}
             </div>
+            {hasMore && (
+                <button
+                    type="button"
+                    className="catalogo-ver-mais"
+                    onClick={handleLoadMore}
+                    disabled={loadingMore}
+                >
+                    {loadingMore ? 'Carregando...' : 'Ver mais'}
+                </button>
+            )}
         </div>
     );
 }

@@ -103,6 +103,25 @@
     }
 }
 
+.catalogo-ver-mais {
+    display: block;
+    margin: var(--space-6) auto 0;
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    font-size: var(--text-sm);
+    color: var(--color-accent);
+    background: var(--color-surface);
+    border: 1px solid var(--color-accent);
+    border-radius: 8px;
+    padding: var(--space-3) var(--space-6);
+    cursor: pointer;
+}
+
+.catalogo-ver-mais:disabled {
+    opacity: 0.6;
+    cursor: default;
+}
+
 @media (max-width: 600px) {
     .catalogo-search {
         flex-direction: column;
