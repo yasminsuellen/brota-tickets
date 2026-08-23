@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { QRCodeSVG } from 'qrcode.react';
+import { formatDate, formatTime } from '../utils/formatDateTime';
 import './TicketDetail.css';
 
 function TicketDetail() {
@@ -70,7 +71,7 @@ function TicketDetail() {
                 <span className="ticket-detail-label">Seu ingresso</span>
                 <h1>{event.title}</h1>
                 <p className="ticket-detail-meta">
-                    {event.date?.slice(0, 10)} · {event.date?.slice(11, 16)}
+                    {formatDate(event.date)} · {formatTime(event.date)}
                 </p>
                 <p className="ticket-detail-meta">{event.location}</p>
                 <p className="ticket-detail-item">

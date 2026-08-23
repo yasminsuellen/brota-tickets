@@ -1,5 +1,5 @@
 const SEAT_MAP_CAPACITY_LIMIT = 200;
-const SEATS_PER_ROW = 10;
+const SEATS_PER_ROW = 15;
 
 function getReservationType(capacity) {
     return capacity <= SEAT_MAP_CAPACITY_LIMIT ? 'SEAT_MAP' : 'QUANTITY';

@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Html5Qrcode } from 'html5-qrcode';
 import { useAuth } from '../context/AuthContext';
+import { formatDate } from '../utils/formatDateTime';
 import './Portaria.css';
 
 const READER_ID = 'portaria-reader';
@@ -130,7 +131,7 @@ function Portaria() {
                     <option value="">Escolha um evento...</option>
                     {events.map((event) => (
                         <option key={event.id} value={event.id}>
-                            {event.title} — {event.date?.slice(0, 10)}
+                            {event.title} — {formatDate(event.date)}
                         </option>
                     ))}
                 </select>
