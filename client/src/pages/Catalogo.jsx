@@ -1,57 +1,114 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import PageHeader from '../components/PageHeader';
 import { removeAccents } from '../utils/removeAccents';
 import './Catalogo.css';
 
+const MONTHS = ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ'];
+
+function formatDateLabel(dateStr, timeStr) {
+    if (!dateStr) return '';
+    const [year, month, day] = dateStr.split('-');
+    const label = `${day} ${MONTHS[Number(month) - 1]} ${year}`;
+    return timeStr ? `${label} · ${timeStr.slice(0, 5)}h` : label;
+}
+
 function Catalogo() {
     const [keyword, setKeyword] = useState('');
     const [events, setEvents] = useState([]);
+    const [buffer, setBuffer] = useState([]);
     const [page, setPage] = useState(0);
     const [hasMore, setHasMore] = useState(false);
     const [loadingMore, setLoadingMore] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const { token } = useAuth();
     const navigate = useNavigate();
+    const seenTitlesRef = useRef(new Set());
 
-    async function fetchEvents(searchKeyword, pageNumber, append) {
+    async function fetchRawPage(searchKeyword, pageNumber) {
+        const params = new URLSearchParams({ keyword: searchKeyword, page: pageNumber });
+        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/events/catalog?${params}`, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error);
+        }
+
+        const unique = data.events.filter((event) => {
+            const key = event.title.toLowerCase().split(/\s+/).slice(0, 3).join(' ');
+            if (seenTitlesRef.current.has(key)) return false;
+            seenTitlesRef.current.add(key);
+            return true;
+        });
+
+        return { unique, rawHasMore: data.hasMore };
+    }
+
+    // Ticketmaster's raw pages often contain duplicate titles (same show,
+    // different dates), so this keeps pulling raw pages into a buffer until
+    // there are 10 unique events to show, or Ticketmaster runs out of pages.
+    // shouldAbort lets a stale call (e.g. a StrictMode double-invoked effect,
+    // or a newer search that started after this one) skip applying its result.
+    async function loadBatch(searchKeyword, startPage, startBuffer, append, shouldAbort = () => false) {
         setError('');
 
+        let localBuffer = startBuffer;
+        let nextPage = startPage;
+        let rawHasMore = true;
+
         try {
-            const params = new URLSearchParams({ keyword: searchKeyword, page: pageNumber });
-            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/events/catalog?${params}`, {
-                headers: { Authorization: `Bearer ${token}` },
-            });
-
-            const data = await response.json();
-
-            if (!response.ok) {
-                setError(data.error);
-                return;
+            while (localBuffer.length < 10 && rawHasMore) {
+                const result = await fetchRawPage(searchKeyword, nextPage);
+                localBuffer = [...localBuffer, ...result.unique];
+                nextPage += 1;
+                rawHasMore = result.rawHasMore;
             }
-
-            setEvents((current) => (append ? [...current, ...data.events] : data.events));
-            setPage(pageNumber);
-            setHasMore(data.hasMore);
         } catch (err) {
-            setError('Não foi possível buscar eventos. Tente novamente.');
+            if (!shouldAbort()) setError('Não foi possível buscar eventos. Tente novamente.');
+            return;
         }
+
+        if (shouldAbort()) return;
+
+        const batch = localBuffer.slice(0, 10);
+        const remaining = localBuffer.slice(10);
+
+        setEvents((current) => (append ? [...current, ...batch] : batch));
+        setBuffer(remaining);
+        setPage(nextPage);
+        setHasMore(remaining.length > 0 || rawHasMore);
     }
 
     useEffect(() => {
-        fetchEvents('', 0, false);
+        let ignore = false;
+        seenTitlesRef.current = new Set();
+        setLoading(true);
+        loadBatch('', 0, [], false, () => ignore).finally(() => {
+            if (!ignore) setLoading(false);
+        });
+
+        return () => {
+            ignore = true;
+        };
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    function handleSearch(e) {
+    async function handleSearch(e) {
         e.preventDefault();
-        fetchEvents(keyword, 0, false);
+        seenTitlesRef.current = new Set();
+        setLoading(true);
+        await loadBatch(keyword, 0, [], false);
+        setLoading(false);
     }
 
     async function handleLoadMore() {
         setLoadingMore(true);
-        await fetchEvents(keyword, page + 1, true);
+        await loadBatch(keyword, page, buffer, true);
         setLoadingMore(false);
     }
 
@@ -75,21 +132,25 @@ function Catalogo() {
                 + Criar evento em branco
             </Link>
             {error && <p className="catalogo-error">{error}</p>}
-            <div className="catalogo-grid">
-                {events.map((event) => (
-                    <div className="catalogo-card" key={event.id} onClick={() => handleSelect(event)}>
-                        <div
-                            className="catalogo-card-media"
-                            style={event.image ? { backgroundImage: `url(${event.image})` } : undefined}
-                        ></div>
-                        <div className="catalogo-card-body">
-                            <span className="catalogo-date">{event.date}</span>
-                            <h3 className="catalogo-card-title">{removeAccents(event.title)}</h3>
-                            <p className="catalogo-card-location">{removeAccents(event.venue)}{event.city ? ` · ${removeAccents(event.city)}` : ''}</p>
+            {loading ? (
+                <p className="catalogo-loading">Carregando eventos...</p>
+            ) : (
+                <div className="catalogo-list">
+                    {events.map((event) => (
+                        <div className="catalogo-row" key={event.id} onClick={() => handleSelect(event)}>
+                            <div
+                                className="catalogo-row-media"
+                                style={event.image ? { backgroundImage: `url(${event.image})` } : undefined}
+                            ></div>
+                            <div className="catalogo-row-body">
+                                <span className="catalogo-row-date">{formatDateLabel(event.date, event.time)}</span>
+                                <h3 className="catalogo-row-title">{removeAccents(event.title)}</h3>
+                                <p className="catalogo-row-location">{removeAccents(event.venue)}{event.city ? ` · ${removeAccents(event.city)}` : ''}</p>
+                            </div>
                         </div>
-                    </div>
-                ))}
-            </div>
+                    ))}
+                </div>
+            )}
             {hasMore && (
                 <button
                     type="button"

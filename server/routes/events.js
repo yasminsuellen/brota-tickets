@@ -12,7 +12,7 @@ router.get('/catalog', requireAuth, requireRole('ORGANIZADOR'), async (req, res)
     const url = new URL('https://app.ticketmaster.com/discovery/v2/events.json');
     url.searchParams.set('apikey', apiKey);
     url.searchParams.set('countryCode', 'BR');
-    url.searchParams.set('size', '10');
+    url.searchParams.set('size', '50');
     url.searchParams.set('page', String(pageNumber));
     if (keyword) {
         url.searchParams.set('keyword', keyword);
@@ -22,7 +22,7 @@ router.get('/catalog', requireAuth, requireRole('ORGANIZADOR'), async (req, res)
         const response = await fetch(url);
         const data = await response.json();
 
-        const events = (data._embedded?.events || []).map((event) => ({
+        const rawEvents = (data._embedded?.events || []).map((event) => ({
             id: event.id,
             title: event.name,
             date: event.dates?.start?.localDate,
@@ -32,6 +32,14 @@ router.get('/catalog', requireAuth, requireRole('ORGANIZADOR'), async (req, res)
             image: event.images?.[0]?.url,
             category: event.classifications?.[0]?.segment?.name,
         }));
+
+        const seenTitles = new Set();
+        const events = rawEvents.filter((event) => {
+            const key = event.title.toLowerCase().split(/\s+/).slice(0, 3).join(' ');
+            if (seenTitles.has(key)) return false;
+            seenTitles.add(key);
+            return true;
+        });
 
         const totalPages = data.page?.totalPages ?? 0;
         const hasMore = pageNumber + 1 < totalPages;
