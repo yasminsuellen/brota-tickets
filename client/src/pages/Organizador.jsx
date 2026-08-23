@@ -97,6 +97,12 @@ function Organizador() {
 
     const proximoEvento = events.find((event) => new Date(event.date) >= new Date());
     const currency = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
+    const currencyNoDecimals = new Intl.NumberFormat('pt-BR', {
+        style: 'currency',
+        currency: 'BRL',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+    });
 
     const categories = [...new Set(events.map((event) => event.category).filter(Boolean))];
 
@@ -143,7 +149,7 @@ function Organizador() {
                     {loading ? (
                         <span className="skeleton skeleton-line" style={{ width: '50%' }}></span>
                     ) : (
-                        <span className="painel-stat-value">{currency.format(stats.grossRevenue)}</span>
+                        <span className="painel-stat-value">{currencyNoDecimals.format(stats.grossRevenue)}</span>
                     )}
                 </div>
                 <div className="painel-stat-card">
