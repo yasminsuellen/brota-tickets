@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import SkeletonCard from '../components/SkeletonCard';
+import { formatDate } from '../utils/formatDateTime';
 import './Cliente.css';
 
 const CATEGORIES = ['Tudo', 'Shows', 'Festivais', 'Teatro', 'Festas'];
@@ -60,6 +61,14 @@ function Cliente() {
         setLoading(false);
     }
 
+    async function handleClear() {
+        setKeyword('');
+        setCategory('Tudo');
+        setLoading(true);
+        await fetchEvents('', 'Tudo', 0, false);
+        setLoading(false);
+    }
+
     async function handleLoadMore() {
         setLoadingMore(true);
         await fetchEvents(keyword, category, page + 1, true);
@@ -93,6 +102,11 @@ function Cliente() {
                         value={keyword}
                         onChange={(e) => setKeyword(e.target.value)}
                     />
+                    {(keyword || category !== 'Tudo') && (
+                        <button type="button" className="cliente-search-clear" aria-label="Limpar busca" onClick={handleClear}>
+                            ×
+                        </button>
+                    )}
                 </form>
             </div>
 
@@ -112,7 +126,7 @@ function Cliente() {
                             ></div>
                             <div className="cliente-card-body">
                                 <span className="cliente-date">
-                                    {event.date?.slice(0, 10)} · {currency.format(event.price)}
+                                    {formatDate(event.date)} · {currency.format(event.price)}
                                 </span>
                                 <h3 className="cliente-card-title">{event.title}</h3>
                                 <p className="cliente-card-location">{event.location}</p>

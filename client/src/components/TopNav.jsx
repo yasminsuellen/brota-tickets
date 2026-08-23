@@ -7,7 +7,7 @@ import './TopNav.css';
 
 const NAV_LINKS = {
   CLIENTE: [
-    { label: 'Descobrir', to: '/' },
+    { label: 'Descobrir', to: '/eventos' },
     { label: 'Ingressos', to: '/meus-ingressos' },
   ],
   ORGANIZADOR: [

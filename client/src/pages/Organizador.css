@@ -123,9 +123,34 @@
     -moz-appearance: none;
 }
 
-.painel-filter-search {
+.painel-filter-search-form {
+    position: relative;
     flex: 1;
     min-width: 140px;
+}
+
+.painel-filter-search {
+    width: 100%;
+    padding-right: var(--space-6);
+}
+
+.painel-filter-search-clear {
+    position: absolute;
+    right: var(--space-2);
+    top: 50%;
+    transform: translateY(-50%);
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: transparent;
+    color: var(--color-muted);
+    font-size: 18px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0;
 }
 
 .painel-filter-uf {

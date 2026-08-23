@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { formatDate } from '../utils/formatDateTime';
 import './Organizador.css';
 
 function Organizador() {
@@ -9,6 +10,7 @@ function Organizador() {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(true);
     const [deletingId, setDeletingId] = useState(null);
+    const [searchInput, setSearchInput] = useState('');
     const [search, setSearch] = useState('');
     const [categoryFilter, setCategoryFilter] = useState('Tudo');
     const [monthFilter, setMonthFilter] = useState('');
@@ -80,6 +82,19 @@ function Organizador() {
         }
     }
 
+    function handleSearchSubmit(e) {
+        e.preventDefault();
+        setSearch(searchInput);
+    }
+
+    function handleClearFilters() {
+        setSearchInput('');
+        setSearch('');
+        setCategoryFilter('Tudo');
+        setMonthFilter('');
+        setUfFilter('');
+    }
+
     const proximoEvento = events.find((event) => new Date(event.date) >= new Date());
     const currency = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
 
@@ -111,7 +126,7 @@ function Organizador() {
                             <span className="painel-proximo-label">Próximo evento</span>
                             <h2>{proximoEvento.title}</h2>
                             <p className="painel-proximo-location">{proximoEvento.location}</p>
-                            <p>{proximoEvento.date?.slice(0, 10)}</p>
+                            <p>{formatDate(proximoEvento.date)}</p>
                         </div>
                     )
                 )}
@@ -142,13 +157,20 @@ function Organizador() {
             </div>
 
             <div className="painel-filters">
-                <input
-                    type="text"
-                    className="painel-filter-search"
-                    placeholder="Buscar por nome..."
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                />
+                <form className="painel-filter-search-form" onSubmit={handleSearchSubmit}>
+                    <input
+                        type="text"
+                        className="painel-filter-search"
+                        placeholder="Buscar por nome..."
+                        value={searchInput}
+                        onChange={(e) => setSearchInput(e.target.value)}
+                    />
+                    {(searchInput || search || categoryFilter !== 'Tudo' || monthFilter || ufFilter) && (
+                        <button type="button" className="painel-filter-search-clear" aria-label="Limpar filtros" onClick={handleClearFilters}>
+                            ×
+                        </button>
+                    )}
+                </form>
                 <select value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value)}>
                     <option value="Tudo">Todas as categorias</option>
                     {categories.map((c) => (
@@ -197,7 +219,7 @@ function Organizador() {
                             filteredEvents.map((event) => (
                                 <tr key={event.id}>
                                     <td className="painel-col-evento" title={event.title}>{event.title}</td>
-                                    <td>{event.date?.slice(0, 10)}</td>
+                                    <td>{formatDate(event.date)}</td>
                                     <td>{event.location}</td>
                                     <td>{event.capacity}</td>
                                     <td>{currency.format(event.price)}</td>

@@ -2,12 +2,14 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import SkeletonCard from '../components/SkeletonCard';
+import { formatDate, formatTime } from '../utils/formatDateTime';
 import './MeusIngressos.css';
 
 const CATEGORIES = ['Tudo', 'Shows', 'Festivais', 'Teatro', 'Festas'];
 
 function MeusIngressos() {
     const [category, setCategory] = useState('Tudo');
+    const [keywordInput, setKeywordInput] = useState('');
     const [keyword, setKeyword] = useState('');
     const [reservations, setReservations] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -42,6 +44,17 @@ function MeusIngressos() {
         fetchMine();
     }, [token]);
 
+    function handleSearchSubmit(e) {
+        e.preventDefault();
+        setKeyword(keywordInput);
+    }
+
+    function handleClear() {
+        setKeywordInput('');
+        setKeyword('');
+        setCategory('Tudo');
+    }
+
     const filtered = reservations.filter((reservation) => {
         const matchesCategory =
             category === 'Tudo' || reservation.event.category?.toLowerCase() === category.toLowerCase();
@@ -72,13 +85,20 @@ function MeusIngressos() {
                         </button>
                     ))}
                 </div>
-                <input
-                    className="ingressos-search"
-                    type="text"
-                    placeholder="Buscar por evento ou local..."
-                    value={keyword}
-                    onChange={(e) => setKeyword(e.target.value)}
-                />
+                <form className="ingressos-search-form" onSubmit={handleSearchSubmit}>
+                    <input
+                        className="ingressos-search"
+                        type="text"
+                        placeholder="Buscar por evento ou local..."
+                        value={keywordInput}
+                        onChange={(e) => setKeywordInput(e.target.value)}
+                    />
+                    {(keywordInput || keyword || category !== 'Tudo') && (
+                        <button type="button" className="ingressos-search-clear" aria-label="Limpar busca" onClick={handleClear}>
+                            ×
+                        </button>
+                    )}
+                </form>
             </div>
 
             {error && <p className="ingressos-error">{error}</p>}
@@ -105,7 +125,7 @@ function MeusIngressos() {
                             ></div>
                             <div className="ingressos-card-body">
                                 <span className="ingressos-date">
-                                    {reservation.event.date?.slice(0, 10)} · {reservation.event.date?.slice(11, 16)}
+                                    {formatDate(reservation.event.date)} · {formatTime(reservation.event.date)}
                                 </span>
                                 <h3 className="ingressos-card-title">{reservation.event.title}</h3>
                                 <p className="ingressos-card-location">{reservation.event.location}</p>

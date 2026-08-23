@@ -114,6 +114,14 @@ function Catalogo() {
         setLoadingMore(false);
     }
 
+    async function handleClear() {
+        setKeyword('');
+        seenTitlesRef.current = new Set();
+        setLoading(true);
+        await loadBatch('', 0, [], false);
+        setLoading(false);
+    }
+
     function handleSelect(event) {
         navigate('/organizador/eventos/novo', { state: event });
     }
@@ -122,12 +130,19 @@ function Catalogo() {
         <div className="page catalogo">
             <PageHeader title="Escolha um evento do catálogo" showBack />
             <form className="catalogo-search" onSubmit={handleSearch}>
-                <input
-                    type="text"
-                    placeholder="Buscar por artista, show, evento..."
-                    value={keyword}
-                    onChange={(e) => setKeyword(e.target.value)}
-                />
+                <div className="catalogo-search-input-wrap">
+                    <input
+                        type="text"
+                        placeholder="Buscar por artista, show, evento..."
+                        value={keyword}
+                        onChange={(e) => setKeyword(e.target.value)}
+                    />
+                    {keyword && (
+                        <button type="button" className="catalogo-search-clear" aria-label="Limpar busca" onClick={handleClear}>
+                            ×
+                        </button>
+                    )}
+                </div>
                 <button type="submit">Buscar</button>
             </form>
             <Link to="/organizador/eventos/novo" className="catalogo-em-branco">
