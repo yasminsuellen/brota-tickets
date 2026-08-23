@@ -218,22 +218,22 @@ function GerenciarEvento() {
                                 <textarea value={description} onChange={(e) => setDescription(e.target.value)} />
                             </label>
                         </div>
-                        <div className="gerenciar-evento-row">
+                        <div className="gerenciar-evento-row gerenciar-evento-row-image">
                             <label>
                                 URL da imagem
                                 <input type="url" placeholder="https://..." value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} />
                             </label>
-                        </div>
-                        <div className="gerenciar-evento-actions">
-                            <button type="submit" disabled={saving}>Salvar alterações</button>
-                            <button
-                                type="button"
-                                className="gerenciar-evento-delete"
-                                onClick={handleDelete}
-                                disabled={deleting}
-                            >
-                                Excluir evento
-                            </button>
+                            <div className="gerenciar-evento-actions">
+                                <button type="submit" disabled={saving}>Salvar alterações</button>
+                                <button
+                                    type="button"
+                                    className="gerenciar-evento-delete"
+                                    onClick={handleDelete}
+                                    disabled={deleting}
+                                >
+                                    Excluir evento
+                                </button>
+                            </div>
                         </div>
                     </form>
                 </>

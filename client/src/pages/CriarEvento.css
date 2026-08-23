@@ -45,6 +45,7 @@
 
 .criar-evento textarea {
     overflow: hidden;
+    white-space: nowrap;
 }
 
 .criar-evento input[type="number"]::-webkit-outer-spin-button,
