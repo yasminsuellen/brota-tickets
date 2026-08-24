@@ -7,7 +7,7 @@ import './EventDetail.css';
 
 function EventDetail() {
     const { id } = useParams();
-    const { token } = useAuth();
+    const { token, user, logout } = useAuth();
     const navigate = useNavigate();
 
     const [event, setEvent] = useState(null);
@@ -16,6 +16,10 @@ function EventDetail() {
     const [submitting, setSubmitting] = useState(false);
 
     useEffect(() => {
+        if (user.role !== 'CLIENTE') {
+            return;
+        }
+
         async function fetchEvent() {
             setError('');
 
@@ -38,7 +42,7 @@ function EventDetail() {
         }
 
         fetchEvent();
-    }, [id, token]);
+    }, [id, token, user.role]);
 
     const currency = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
 
@@ -61,6 +65,26 @@ function EventDetail() {
         } finally {
             setSubmitting(false);
         }
+    }
+
+    if (user.role !== 'CLIENTE') {
+        const roleLabel = user.role === 'ORGANIZADOR' ? 'organizador' : 'portaria';
+
+        return (
+            <div className="page event-detail">
+                <div className="event-detail-role-guard">
+                    <h1>Esta área é exclusiva para clientes</h1>
+                    <p>
+                        Sua conta atual é do tipo <strong>{roleLabel}</strong>. Para ver os detalhes do evento
+                        e comprar ingressos, você precisa estar logado com uma conta cliente.
+                    </p>
+                    <div className="event-detail-role-guard-actions">
+                        <button onClick={() => { logout(); navigate('/'); }}>Sair da conta</button>
+                        <Link to="/eventos">← Voltar</Link>
+                    </div>
+                </div>
+            </div>
+        );
     }
 
     if (error) {

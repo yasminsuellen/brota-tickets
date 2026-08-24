@@ -27,6 +27,7 @@
     appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
+    background-image: none;
 }
 
 .portaria-mode-toggle {
@@ -81,11 +82,15 @@
     flex: 1;
     box-sizing: border-box;
     height: 44px;
+    min-height: 44px;
+    line-height: 44px;
     font-family: var(--font-body);
     font-size: var(--text-base);
     padding: 0 var(--space-3);
     border: 1px solid var(--color-line);
     border-radius: 8px;
+    appearance: none;
+    -webkit-appearance: none;
 }
 
 .portaria-manual button {

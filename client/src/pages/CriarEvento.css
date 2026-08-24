@@ -56,6 +56,12 @@
     height: 44px;
 }
 
+.criar-evento input[type="date"],
+.criar-evento input[type="time"] {
+    width: 100%;
+    min-width: 0;
+}
+
 .criar-evento textarea {
     overflow: hidden;
     white-space: nowrap;
