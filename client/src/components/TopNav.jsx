@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import LogoutButton from './LogoutButton';
@@ -32,6 +32,22 @@ function TopNav() {
   const location = useLocation();
   const links = user ? NAV_LINKS[user.role] || [] : PUBLIC_LINKS;
   const overlay = location.pathname === '/';
+
+  // Locks background scroll while the mobile menu is open, and closes
+  // the menu on any route change so it can't be left open (and scroll
+  // left locked) after a navigation that doesn't call setMenuOpen(false)
+  // itself, e.g. logout.
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [location.pathname]);
+
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? 'hidden' : '';
+
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [menuOpen]);
 
   return (
     <header className={`topnav${overlay ? ' topnav-overlay' : ''}`}>
