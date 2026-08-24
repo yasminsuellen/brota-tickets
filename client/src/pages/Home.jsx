@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { useAuthModal } from '../context/AuthModalContext';
 import heroImage from '../assets/hero.png';
 import promoImage from '../assets/home.jpg';
 import SkeletonCard from '../components/SkeletonCard';
@@ -16,7 +15,7 @@ function Home() {
     const [loading, setLoading] = useState(true);
     const [visibleCount, setVisibleCount] = useState(PREVIEW_ROWS * 3);
     const { token } = useAuth();
-    const { requireAuth } = useAuthModal();
+    const navigate = useNavigate();
     const gridRef = useRef(null);
 
     useEffect(() => {
@@ -79,7 +78,7 @@ function Home() {
                     {loading
                         ? Array.from({ length: visibleCount }).map((_, i) => <SkeletonCard key={i} className="home-card" />)
                         : events.slice(0, visibleCount).map((event) => (
-                            <div className="home-card" key={event.id} onClick={() => requireAuth(`/eventos/${event.id}`)}>
+                            <div className="home-card" key={event.id} onClick={() => navigate(`/eventos/${event.id}`)}>
                                 <div
                                     className="home-card-media"
                                     style={event.imageUrl ? { backgroundImage: `url(${event.imageUrl})` } : undefined}

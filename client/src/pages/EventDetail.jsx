@@ -1,32 +1,29 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useAuthModal } from '../context/AuthModalContext';
 import { formatDate, formatTime } from '../utils/formatDateTime';
 import { createReservation } from '../utils/createReservation';
 import './EventDetail.css';
 
 function EventDetail() {
     const { id } = useParams();
-    const { token, user, logout } = useAuth();
+    const { token, user } = useAuth();
+    const { requireAuth } = useAuthModal();
     const navigate = useNavigate();
 
     const [event, setEvent] = useState(null);
     const [quantity, setQuantity] = useState(1);
     const [error, setError] = useState('');
+    const [purchaseError, setPurchaseError] = useState('');
     const [submitting, setSubmitting] = useState(false);
 
     useEffect(() => {
-        if (user.role !== 'CLIENTE') {
-            return;
-        }
-
         async function fetchEvent() {
             setError('');
 
             try {
-                const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/events/published/${id}`, {
-                    headers: { Authorization: `Bearer ${token}` },
-                });
+                const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/events/published/${id}`);
 
                 const data = await response.json();
 
@@ -42,17 +39,32 @@ function EventDetail() {
         }
 
         fetchEvent();
-    }, [id, token, user.role]);
+    }, [id]);
 
     const currency = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
 
     async function handleReservar() {
+        setPurchaseError('');
+
+        if (user && user.role !== 'CLIENTE') {
+            const roleLabel = user.role === 'ORGANIZADOR' ? 'organizador' : 'portaria';
+            setPurchaseError(`Sua conta atual é do tipo ${roleLabel}. Para comprar ingressos, faça login com uma conta cliente.`);
+            return;
+        }
+
+        if (!user) {
+            // Both flows go through /reservar after login, so the reservation
+            // itself always reads a fresh token from a fresh mount, instead of
+            // a purchase callback closing over the token from before login.
+            requireAuth(`/eventos/${id}/reservar`);
+            return;
+        }
+
         if (event.type === 'SEAT_MAP') {
             navigate(`/eventos/${id}/reservar`);
             return;
         }
 
-        setError('');
         setSubmitting(true);
 
         try {
@@ -61,30 +73,10 @@ function EventDetail() {
                 state: { reservations: data.reservations, event },
             });
         } catch (err) {
-            setError(err.message);
+            setPurchaseError(err.message);
         } finally {
             setSubmitting(false);
         }
-    }
-
-    if (user.role !== 'CLIENTE') {
-        const roleLabel = user.role === 'ORGANIZADOR' ? 'organizador' : 'portaria';
-
-        return (
-            <div className="page event-detail">
-                <div className="event-detail-role-guard">
-                    <h1>Esta área é exclusiva para clientes</h1>
-                    <p>
-                        Sua conta atual é do tipo <strong>{roleLabel}</strong>. Para ver os detalhes do evento
-                        e comprar ingressos, você precisa estar logado com uma conta cliente.
-                    </p>
-                    <div className="event-detail-role-guard-actions">
-                        <button onClick={() => { logout(); navigate('/'); }}>Sair da conta</button>
-                        <Link to="/eventos">← Voltar</Link>
-                    </div>
-                </div>
-            </div>
-        );
     }
 
     if (error) {
@@ -196,7 +188,7 @@ function EventDetail() {
                             </div>
                         )}
 
-                        {error && <p className="event-detail-error">{error}</p>}
+                        {purchaseError && <p className="event-detail-error">{purchaseError}</p>}
 
                         <button onClick={handleReservar} disabled={submitting}>
                             {submitting ? 'Processando...' : 'Garantir meu ingresso'}

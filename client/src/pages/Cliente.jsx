@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { useAuthModal } from '../context/AuthModalContext';
 import SkeletonCard from '../components/SkeletonCard';
 import { formatDate } from '../utils/formatDateTime';
 import './Cliente.css';
@@ -17,7 +17,7 @@ function Cliente() {
     const [loadingMore, setLoadingMore] = useState(false);
     const [error, setError] = useState('');
     const { token } = useAuth();
-    const { requireAuth } = useAuthModal();
+    const navigate = useNavigate();
 
     async function fetchEvents(searchKeyword, searchCategory, pageNumber, append) {
         setError('');
@@ -119,7 +119,7 @@ function Cliente() {
                     <p className="cliente-empty">Nenhum evento encontrado.</p>
                 ) : (
                     events.map((event) => (
-                        <div className="cliente-card" key={event.id} onClick={() => requireAuth(`/eventos/${event.id}`)}>
+                        <div className="cliente-card" key={event.id} onClick={() => navigate(`/eventos/${event.id}`)}>
                             <div
                                 className="cliente-card-media"
                                 style={event.imageUrl ? { backgroundImage: `url(${event.imageUrl})` } : undefined}

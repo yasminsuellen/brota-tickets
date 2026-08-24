@@ -87,7 +87,7 @@ router.get('/published', async (req, res) => {
     res.json({ events, hasMore });
 });
 
-router.get('/published/:id', requireAuth, requireRole('CLIENTE'), async (req, res) => {
+router.get('/published/:id', async (req, res) => {
     const event = await prisma.event.findUnique({
         where: { id: req.params.id },
         include: {
