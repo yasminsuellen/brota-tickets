@@ -299,6 +299,7 @@
 @media (max-width: 859px) {
     .home-hero {
         min-height: 420px;
+        background-attachment: scroll;
     }
 
     .home-section-header h2 {
