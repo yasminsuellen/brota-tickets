@@ -84,6 +84,12 @@
     height: 44px;
 }
 
+.gerenciar-evento input[type="date"],
+.gerenciar-evento input[type="time"] {
+    width: 100%;
+    min-width: 0;
+}
+
 .gerenciar-evento textarea {
     overflow: hidden;
     white-space: nowrap;
