@@ -51,12 +51,17 @@ function Portaria() {
 
         const scanner = new Html5Qrcode(READER_ID);
         scannerRef.current = scanner;
+        let handled = false;
 
         scanner
             .start(
                 { facingMode: 'environment' },
                 { fps: 10, qrbox: 250 },
-                (decodedText) => validate(decodedText)
+                (decodedText) => {
+                    if (handled) return;
+                    handled = true;
+                    validate(decodedText);
+                }
             )
             .catch(() => {
                 setError('Não foi possível acessar a câmera. Use a digitação manual.');
