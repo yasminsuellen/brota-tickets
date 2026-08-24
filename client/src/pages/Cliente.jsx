@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useAuthModal } from '../context/AuthModalContext';
 import SkeletonCard from '../components/SkeletonCard';
 import { formatDate } from '../utils/formatDateTime';
 import './Cliente.css';
@@ -17,7 +17,7 @@ function Cliente() {
     const [loadingMore, setLoadingMore] = useState(false);
     const [error, setError] = useState('');
     const { token } = useAuth();
-    const navigate = useNavigate();
+    const { requireAuth } = useAuthModal();
 
     async function fetchEvents(searchKeyword, searchCategory, pageNumber, append) {
         setError('');
@@ -29,7 +29,7 @@ function Cliente() {
 
         try {
             const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/events/published?${params}`, {
-                headers: { Authorization: `Bearer ${token}` },
+                headers: token ? { Authorization: `Bearer ${token}` } : undefined,
             });
 
             const data = await response.json();
@@ -119,7 +119,7 @@ function Cliente() {
                     <p className="cliente-empty">Nenhum evento encontrado.</p>
                 ) : (
                     events.map((event) => (
-                        <div className="cliente-card" key={event.id} onClick={() => navigate(`/eventos/${event.id}`)}>
+                        <div className="cliente-card" key={event.id} onClick={() => requireAuth(`/eventos/${event.id}`)}>
                             <div
                                 className="cliente-card-media"
                                 style={event.imageUrl ? { backgroundImage: `url(${event.imageUrl})` } : undefined}

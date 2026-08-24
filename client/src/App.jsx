@@ -23,8 +23,8 @@ function App() {
       <ScrollToTop />
       <Routes>
         <Route path="/login" element={<Login />} />
-        <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
-        <Route path="/eventos" element={<ProtectedRoute><Cliente /></ProtectedRoute>} />
+        <Route path="/" element={<Home />} />
+        <Route path="/eventos" element={<Cliente />} />
         <Route path="/eventos/:id" element={<ProtectedRoute><EventDetail /></ProtectedRoute>} />
         <Route path="/eventos/:id/reservar" element={<ProtectedRoute role="CLIENTE"><Reservar /></ProtectedRoute>} />
         <Route path="/reservas/:id/pagamento" element={<ProtectedRoute role="CLIENTE"><Pagamento /></ProtectedRoute>} />

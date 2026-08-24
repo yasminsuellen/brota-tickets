@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useAuthModal } from '../context/AuthModalContext';
 import heroImage from '../assets/hero.png';
 import promoImage from '../assets/home.jpg';
 import SkeletonCard from '../components/SkeletonCard';
@@ -15,14 +16,14 @@ function Home() {
     const [loading, setLoading] = useState(true);
     const [visibleCount, setVisibleCount] = useState(PREVIEW_ROWS * 3);
     const { token } = useAuth();
-    const navigate = useNavigate();
+    const { requireAuth } = useAuthModal();
     const gridRef = useRef(null);
 
     useEffect(() => {
         async function fetchEvents() {
             try {
                 const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/events/published`, {
-                    headers: { Authorization: `Bearer ${token}` },
+                    headers: token ? { Authorization: `Bearer ${token}` } : undefined,
                 });
 
                 const data = await response.json();
@@ -71,14 +72,14 @@ function Home() {
             <div className="page home-section">
                 <div className="home-section-header">
                     <h2>Descubra o que brota perto de você</h2>
-                    <Link to="/eventos">Ver tudo →</Link>
+                    <Link to="/eventos" className="home-ver-tudo-desktop">Ver tudo →</Link>
                 </div>
 
                 <div className="home-grid" ref={gridRef}>
                     {loading
                         ? Array.from({ length: visibleCount }).map((_, i) => <SkeletonCard key={i} className="home-card" />)
                         : events.slice(0, visibleCount).map((event) => (
-                            <div className="home-card" key={event.id} onClick={() => navigate(`/eventos/${event.id}`)}>
+                            <div className="home-card" key={event.id} onClick={() => requireAuth(`/eventos/${event.id}`)}>
                                 <div
                                     className="home-card-media"
                                     style={event.imageUrl ? { backgroundImage: `url(${event.imageUrl})` } : undefined}
@@ -93,6 +94,8 @@ function Home() {
                             </div>
                         ))}
                 </div>
+
+                <Link to="/eventos" className="home-ver-tudo-mobile">Ver tudo →</Link>
             </div>
 
             <div className="home-marquee-wrap">

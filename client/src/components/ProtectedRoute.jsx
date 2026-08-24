@@ -1,5 +1,6 @@
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import LoginModal from './LoginModal';
 
 const roleHome = {
   ORGANIZADOR: '/organizador',
@@ -11,7 +12,7 @@ function ProtectedRoute({ role, children }) {
   const { user } = useAuth();
 
   if (!user) {
-    return <Navigate to="/login" replace />;
+    return <LoginModal />;
   }
 
   if (role && user.role !== role) {

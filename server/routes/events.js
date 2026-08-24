@@ -50,7 +50,7 @@ router.get('/catalog', requireAuth, requireRole('ORGANIZADOR'), async (req, res)
     }
 });
 
-router.get('/published', requireAuth, async (req, res) => {
+router.get('/published', async (req, res) => {
     const { keyword, category, page } = req.query;
     const pageNumber = Number(page) || 0;
     const pageSize = 50;

@@ -292,6 +292,10 @@
     opacity: 0.9;
 }
 
+.home-ver-tudo-mobile {
+    display: none;
+}
+
 @media (max-width: 859px) {
     .home-hero {
         min-height: 420px;
@@ -299,6 +303,21 @@
 
     .home-section-header h2 {
         font-size: var(--text-lg);
+    }
+
+    .home-ver-tudo-desktop {
+        display: none;
+    }
+
+    .home-ver-tudo-mobile {
+        display: block;
+        text-align: center;
+        font-family: var(--font-body);
+        font-weight: 700;
+        font-size: var(--text-sm);
+        color: var(--color-accent-2);
+        text-decoration: none;
+        margin-top: var(--space-5);
     }
 
     .home-promo,

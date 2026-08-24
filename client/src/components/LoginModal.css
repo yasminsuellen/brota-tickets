@@ -1,0 +1,99 @@
+.login-modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-6);
+    background: rgba(28, 20, 36, 0.55);
+}
+
+.login-modal {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+    padding: var(--space-7);
+    border-radius: 12px;
+    background: var(--color-surface);
+    font-family: var(--font-body);
+}
+
+.login-modal-close {
+    position: absolute;
+    top: var(--space-4);
+    right: var(--space-4);
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: transparent;
+    color: var(--color-muted);
+    font-size: 20px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.login-modal .login-eyebrow {
+    color: var(--color-accent-2);
+    font-size: var(--text-sm);
+    font-weight: 700;
+    text-transform: uppercase;
+    margin: 0 0 var(--space-1);
+}
+
+.login-modal .login-title {
+    font-family: var(--font-display);
+    color: var(--color-accent);
+    font-size: var(--text-xl);
+    text-transform: uppercase;
+    margin: 0 0 var(--space-2);
+}
+
+.login-modal-hint {
+    font-size: var(--text-sm);
+    color: var(--color-muted);
+    margin: 0 0 var(--space-5);
+}
+
+.login-modal form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+}
+
+.login-modal label {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    font-size: var(--text-sm);
+    color: var(--color-ink);
+}
+
+.login-modal input {
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    padding: var(--space-3);
+    border: 1px solid var(--color-line);
+    border-radius: 8px;
+}
+
+.login-modal button {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    font-size: var(--text-sm);
+    color: var(--color-surface);
+    background: var(--color-accent);
+    border: none;
+    border-radius: 8px;
+    padding: var(--space-3);
+    cursor: pointer;
+}
+
+.login-modal .login-error {
+    color: var(--color-accent-2);
+    font-size: var(--text-sm);
+    margin: 0;
+}

@@ -55,8 +55,10 @@
     letter-spacing: 0.1em;
 }
 
-.topnav-actions button {
+.topnav-actions button,
+.topnav-login-btn {
     position: relative;
+    display: inline-block;
     font-family: var(--font-body);
     font-weight: 500;
     text-transform: uppercase;
@@ -66,6 +68,7 @@
     border: 1px solid var(--color-surface);
     border-radius: 7px;
     padding: var(--space-2) var(--space-5);
+    text-decoration: none;
     cursor: pointer;
 }
 
@@ -114,7 +117,8 @@
         font-size: var(--text-lg);
     }
 
-    .topnav-actions button {
+    .topnav-actions button,
+    .topnav-login-btn {
         margin-top: auto;
     }
 }

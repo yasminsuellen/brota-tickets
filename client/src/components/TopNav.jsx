@@ -5,6 +5,11 @@ import LogoutButton from './LogoutButton';
 import logoImage from '../assets/logo.png';
 import './TopNav.css';
 
+const PUBLIC_LINKS = [
+  { label: 'Início', to: '/' },
+  { label: 'Descobrir', to: '/eventos' },
+];
+
 const NAV_LINKS = {
   CLIENTE: [
     { label: 'Início', to: '/' },
@@ -25,7 +30,7 @@ function TopNav() {
   const { user } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
   const location = useLocation();
-  const links = user ? NAV_LINKS[user.role] || [] : [];
+  const links = user ? NAV_LINKS[user.role] || [] : PUBLIC_LINKS;
   const overlay = location.pathname === '/';
 
   return (
@@ -50,7 +55,9 @@ function TopNav() {
             <Link key={link.to} to={link.to} onClick={() => setMenuOpen(false)}>{link.label}</Link>
           ))}
         </nav>
-        {user && <LogoutButton />}
+        {user ? <LogoutButton /> : (
+          <Link to="/login" className="topnav-login-btn" onClick={() => setMenuOpen(false)}>Login</Link>
+        )}
       </div>
     </header>
   );
