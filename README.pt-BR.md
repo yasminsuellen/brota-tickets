@@ -15,6 +15,11 @@ Plataforma de eventos e ingressos: organizadores publicam eventos, clientes nave
 
 Construído para o desafio Elite Dev da Verzel. Veja [`AI_USAGE.md`](./AI_USAGE.md) para saber quais ferramentas de IA foram usadas, onde, e o que foi feito manualmente.
 
+<p align="center">
+  <img src="./docs/screenshots/home.jpg" width="49%" alt="Página inicial do Brota Tickets" />
+  <img src="./docs/screenshots/catalogo.jpg" width="49%" alt="Página de catálogo de eventos do Brota Tickets" />
+</p>
+
 ## Demo ao vivo
 
 - Front-end: https://brota-tickets.vercel.app/

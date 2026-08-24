@@ -15,6 +15,11 @@ Events and ticketing platform: organizers publish events, customers browse and r
 
 Built for Verzel's Elite Dev take-home challenge. See [`AI_USAGE.md`](./AI_USAGE.md) for what AI tools were used, where, and what was done by hand.
 
+<p align="center">
+  <img src="./docs/screenshots/home.jpg" width="49%" alt="Brota Tickets home page" />
+  <img src="./docs/screenshots/catalogo.jpg" width="49%" alt="Brota Tickets event catalog page" />
+</p>
+
 ## Live demo
 
 - Front-end: https://brota-tickets.vercel.app/
