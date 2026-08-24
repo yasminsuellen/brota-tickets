@@ -1,0 +1,15 @@
+{
+  "name": "Brota Tickets",
+  "short_name": "Brota Tickets",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f7f4f2",
+  "theme_color": "#5b2a9e",
+  "icons": [
+    {
+      "src": "/icon.png",
+      "sizes": "136x232",
+      "type": "image/png"
+    }
+  ]
+}
