@@ -123,7 +123,10 @@ function MeusIngressos() {
                 ) : grouped.length === 0 ? (
                     <p className="ingressos-empty">Nenhum ingresso encontrado.</p>
                 ) : (
-                    grouped.map((group) => (
+                    grouped.map((group) => {
+                        const validatedCount = group.reservations.filter((r) => r.ticket?.validated).length;
+
+                        return (
                         <div
                             className="ingressos-card"
                             key={group.event.id}
@@ -148,6 +151,13 @@ function MeusIngressos() {
                                 {group.reservations.length > 1 && (
                                     <span className="ingressos-card-count">{group.reservations.length} ingressos</span>
                                 )}
+                                {validatedCount > 0 && (
+                                    <span className="ingressos-card-used">
+                                        {group.reservations.length === 1
+                                            ? 'Usado'
+                                            : `${validatedCount}/${group.reservations.length} usados`}
+                                    </span>
+                                )}
                             </div>
                             <div className="ingressos-card-body">
                                 <span className="ingressos-date">
@@ -157,7 +167,8 @@ function MeusIngressos() {
                                 <p className="ingressos-card-location">{group.event.location}</p>
                             </div>
                         </div>
-                    ))
+                        );
+                    })
                 )}
             </div>
         </div>

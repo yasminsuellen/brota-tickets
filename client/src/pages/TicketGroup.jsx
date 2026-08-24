@@ -34,6 +34,7 @@ function TicketGroup() {
                     >
                         <span>
                             {reservation.seatCode ? `Assento ${reservation.seatCode}` : `Ingresso ${i + 1}`}
+                            {reservation.ticket?.validated && <span className="ticket-group-item-used">Usado</span>}
                         </span>
                         <span className="ticket-group-item-arrow">→</span>
                     </div>

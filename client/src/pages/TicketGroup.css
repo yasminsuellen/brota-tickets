@@ -40,3 +40,11 @@
 .ticket-group-item-arrow {
     color: var(--color-accent-2);
 }
+
+.ticket-group-item-used {
+    margin-left: var(--space-3);
+    font-family: var(--font-body);
+    text-transform: none;
+    font-size: var(--text-sm);
+    color: var(--color-muted);
+}

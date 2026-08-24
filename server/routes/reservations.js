@@ -188,7 +188,10 @@ router.patch('/:id/pay', requireAuth, requireRole('CLIENTE'), async (req, res) =
 });
 
 router.patch('/:id/cancel', requireAuth, requireRole('CLIENTE'), async (req, res) => {
-    const reservation = await prisma.reservation.findUnique({ where: { id: req.params.id } });
+    const reservation = await prisma.reservation.findUnique({
+        where: { id: req.params.id },
+        include: { ticket: true },
+    });
 
     if (!reservation || reservation.userId !== req.user.id) {
         return res.status(404).json({ error: 'Reserva não encontrada.' });
@@ -196,6 +199,10 @@ router.patch('/:id/cancel', requireAuth, requireRole('CLIENTE'), async (req, res
 
     if (reservation.status !== 'CONFIRMADA') {
         return res.status(409).json({ error: 'Essa reserva não pode ser cancelada.' });
+    }
+
+    if (reservation.ticket?.validated) {
+        return res.status(409).json({ error: 'Esse ingresso já foi validado na portaria e não pode ser cancelado.' });
     }
 
     const updated = await prisma.reservation.update({

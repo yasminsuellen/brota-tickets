@@ -131,6 +131,10 @@ function TicketDetail() {
                         : `${reservation.quantity} ${reservation.quantity === 1 ? 'ingresso' : 'ingressos'}`}
                 </p>
 
+                {ticket.validated && (
+                    <p className="ticket-detail-status is-used">✓ Ingresso já utilizado</p>
+                )}
+
                 <div className="ticket-detail-qr">
                     <QRCodeSVG value={ticket.qrToken} size={200} />
                 </div>
@@ -147,7 +151,7 @@ function TicketDetail() {
                     {copied ? 'Link copiado!' : 'Compartilhar ingresso'}
                 </button>
 
-                {confirmingCancel ? (
+                {!ticket.validated && (confirmingCancel ? (
                     <div className="ticket-detail-cancel-confirm">
                         {cancelError && <p className="ticket-detail-error">{cancelError}</p>}
                         <p>Cancelar este ingresso? O lugar volta a ficar disponível.</p>
@@ -172,7 +176,7 @@ function TicketDetail() {
                     <button className="ticket-detail-cancel" onClick={() => setConfirmingCancel(true)}>
                         Cancelar ingresso
                     </button>
-                )}
+                ))}
             </div>
         </div>
     );
