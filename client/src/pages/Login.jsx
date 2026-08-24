@@ -47,7 +47,12 @@ function Login() {
     return (
         <div className="login">
             <div className="login-photo" style={{ backgroundImage: `url(${heroImage})` }}>
-                <img src={logoImage} alt="Brota Tickets" className="login-brand" />
+                <img
+                    src={logoImage}
+                    alt="Brota Tickets"
+                    className="login-brand"
+                    onClick={() => navigate('/')}
+                />
             </div>
             <div className="login-form-side">
                 <p className="login-eyebrow">BEM VINDO DE VOLTA</p>
