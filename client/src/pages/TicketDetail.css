@@ -53,3 +53,83 @@
     padding: var(--space-3);
     cursor: pointer;
 }
+
+.ticket-detail-code {
+    margin: 0 0 var(--space-4);
+}
+
+.ticket-detail-code-label {
+    margin: 0 0 var(--space-1);
+    font-size: var(--text-sm);
+    color: var(--color-muted);
+}
+
+.ticket-detail-code-value {
+    width: 100%;
+    font-family: monospace;
+    font-size: var(--text-sm);
+    color: var(--color-ink);
+    background: var(--color-bg);
+    border: 1px dashed var(--color-line);
+    border-radius: 8px;
+    padding: var(--space-2);
+    word-break: break-all;
+    cursor: pointer;
+}
+
+.ticket-detail-code-copied {
+    margin: var(--space-1) 0 0;
+    font-size: var(--text-sm);
+    color: var(--color-accent);
+}
+
+.ticket-detail-cancel {
+    width: 100%;
+    margin-top: var(--space-3);
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    font-size: var(--text-sm);
+    color: var(--color-muted);
+    background: transparent;
+    border: 1px solid var(--color-line);
+    border-radius: 8px;
+    padding: var(--space-3);
+    cursor: pointer;
+}
+
+.ticket-detail-cancel-confirm {
+    margin-top: var(--space-3);
+    padding: var(--space-3);
+    border: 1px solid var(--color-line);
+    border-radius: 8px;
+    font-size: var(--text-sm);
+}
+
+.ticket-detail-cancel-actions {
+    display: flex;
+    gap: var(--space-2);
+    margin-top: var(--space-2);
+}
+
+.ticket-detail-cancel-back,
+.ticket-detail-cancel-confirm-button {
+    flex: 1;
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    font-size: var(--text-sm);
+    border-radius: 8px;
+    padding: var(--space-2);
+    cursor: pointer;
+}
+
+.ticket-detail-cancel-back {
+    color: var(--color-ink);
+    background: var(--color-bg);
+    border: 1px solid var(--color-line);
+}
+
+.ticket-detail-cancel-confirm-button {
+    color: var(--color-surface);
+    background: var(--color-accent-2);
+    border: none;
+}
