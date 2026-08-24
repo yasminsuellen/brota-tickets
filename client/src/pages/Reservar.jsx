@@ -18,30 +18,53 @@ function Reservar() {
     const [error, setError] = useState('');
     const [submitting, setSubmitting] = useState(false);
 
-    useEffect(() => {
-        async function fetchEvent() {
+    async function fetchEvent({ silent } = {}) {
+        if (!silent) {
             setError('');
-
-            try {
-                const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/events/published/${id}`, {
-                    headers: { Authorization: `Bearer ${token}` },
-                });
-
-                const data = await response.json();
-
-                if (!response.ok) {
-                    setError(data.error);
-                    return;
-                }
-
-                setEvent(data);
-            } catch (err) {
-                setError('Não foi possível carregar o evento. Tente novamente.');
-            }
         }
 
+        try {
+            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/events/published/${id}`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                if (!silent) setError(data.error);
+                return;
+            }
+
+            setEvent(data);
+
+            if (data.type === 'SEAT_MAP') {
+                const takenSeats = new Set(data.seats.filter((seat) => seat.taken).map((seat) => seat.code));
+                setSelectedSeats((seats) => seats.filter((code) => !takenSeats.has(code)));
+            } else {
+                setQuantity((q) => Math.max(1, Math.min(q, data.remaining || 1)));
+            }
+        } catch (err) {
+            if (!silent) setError('Não foi possível carregar o evento. Tente novamente.');
+        }
+    }
+
+    useEffect(() => {
         fetchEvent();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [id, token]);
+
+    // Polls availability so seats/stock taken by other customers show up
+    // without a manual refresh, without needing a websocket for this scope.
+    useEffect(() => {
+        if (submitting) {
+            return;
+        }
+
+        const intervalId = setInterval(() => fetchEvent({ silent: true }), 5000);
+
+        return () => clearInterval(intervalId);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [id, token, submitting]);
 
     function toggleSeat(code) {
         setSelectedSeats((seats) =>
