@@ -58,6 +58,8 @@ model Reservation {
   eventId String
   event   Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
   ticket  Ticket?
+
+  @@unique([eventId, seatCode])
 }
 
 model Ticket {

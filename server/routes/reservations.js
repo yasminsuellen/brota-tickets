@@ -102,6 +102,10 @@ router.post('/', requireAuth, requireRole('CLIENTE'), async (req, res) => {
                 throw { status: 400, message: 'Informe a quantidade de ingressos.' };
             }
 
+            // Locks the event row so a concurrent request can't read the same
+            // "sold so far" total before this one commits its new reservations.
+            await tx.$queryRaw`SELECT id FROM "Event" WHERE id = ${eventId} FOR UPDATE`;
+
             const existing = await tx.reservation.findMany({
                 where: { eventId, status: { in: ['PENDENTE', 'CONFIRMADA'] } },
             });
@@ -133,6 +137,10 @@ router.post('/', requireAuth, requireRole('CLIENTE'), async (req, res) => {
             return res.status(err.status).json({ error: err.message });
         }
 
+        if (err.code === 'P2002') {
+            return res.status(409).json({ error: 'Um ou mais assentos selecionados já foram reservados.' });
+        }
+
         res.status(500).json({ error: 'Não foi possível criar a reserva.' });
     }
 });
@@ -157,7 +165,7 @@ router.patch('/:id/pay', requireAuth, requireRole('CLIENTE'), async (req, res) =
     if (decision === 'decline') {
         const updated = await prisma.reservation.update({
             where: { id: reservation.id },
-            data: { status: 'RECUSADA' },
+            data: { status: 'RECUSADA', seatCode: null },
         });
 
         return res.json(updated);
@@ -175,6 +183,25 @@ router.patch('/:id/pay', requireAuth, requireRole('CLIENTE'), async (req, res) =
             },
         }),
     ]);
+
+    res.json(updated);
+});
+
+router.patch('/:id/cancel', requireAuth, requireRole('CLIENTE'), async (req, res) => {
+    const reservation = await prisma.reservation.findUnique({ where: { id: req.params.id } });
+
+    if (!reservation || reservation.userId !== req.user.id) {
+        return res.status(404).json({ error: 'Reserva não encontrada.' });
+    }
+
+    if (reservation.status !== 'CONFIRMADA') {
+        return res.status(409).json({ error: 'Essa reserva não pode ser cancelada.' });
+    }
+
+    const updated = await prisma.reservation.update({
+        where: { id: reservation.id },
+        data: { status: 'CANCELADA', seatCode: null },
+    });
 
     res.json(updated);
 });
